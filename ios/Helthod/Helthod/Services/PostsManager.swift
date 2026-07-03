@@ -174,5 +174,16 @@ class PostManager: ObservableObject {
             return false
         }
     }
+
+    func deletePost(id: String) async -> Bool {
+        do {
+            let _: [String: String] = try await networkManager.delete(endpoint: "/posts/\(id)", body: ["": ""])
+            posts.removeAll { $0.id == id }
+            return true
+        } catch {
+            print("❌ Ошибка удаления поста: \(error)")
+            return false
+        }
+    }
 }
 

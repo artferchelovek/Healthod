@@ -110,4 +110,22 @@ class AuthManager: ObservableObject {
     func getToken() -> String? { UserDefaults.standard.string(forKey: tokenKey) }
     private func removeToken() { UserDefaults.standard.removeObject(forKey: tokenKey) }
     private func checkSavedToken() -> Bool { getToken() != nil }
+
+    var currentUserId: String? {
+        guard let token = getToken() else { return nil }
+        let parts = token.split(separator: ".")
+        guard parts.count > 1 else { return nil }
+        var payload = String(parts[1])
+            .replacingOccurrences(of: "-", with: "+")
+            .replacingOccurrences(of: "_", with: "/")
+        while payload.count % 4 != 0 { payload.append("=") }
+        guard let data = Data(base64Encoded: payload),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return nil }
+        print("🔍 JWT payload: \(json)")
+        if let id = json["id"] ?? json["_id"] ?? json["userId"] ?? json["user_id"] ?? json["sub"] {
+            print("🔍 JWT user id = \(id)")
+            return "\(id)"
+        }
+        return nil
+    }
 }

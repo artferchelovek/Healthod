@@ -11,12 +11,33 @@ enum PostType: String, Codable {
 struct PostView: View {
     let post: Post
     @State private var showComments = false
+    @State private var showDeleteAlert = false
+    @State private var isDeleting = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(post.author.username)
-                Text(post.relativeDate).font(.caption).opacity(0.7)
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(post.author.username)
+                    Text(post.relativeDate).font(.caption).opacity(0.7)
+                }
+                Spacer()
+                if post.authorId == AuthManager.shared.currentUserId {
+                    Menu {
+                        Button(role: .destructive) {
+                            showDeleteAlert = true
+                        } label: {
+                            Label("Удалить пост", systemImage: "trash")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(Color(red: 0.55, green: 0.52, blue: 0.44))
+                            .frame(width: 32, height: 32)
+                            .background(Color(red: 0.94, green: 0.93, blue: 0.91))
+                            .clipShape(Circle())
+                    }
+                }
             }
 
             Text(post.title)
@@ -60,6 +81,17 @@ struct PostView: View {
         .background(RoundedRectangle(cornerRadius: 10).fill(Color.surface))
         .sheet(isPresented: $showComments) {
             CommentsView(postId: post.id)
+        }
+        .alert("Удалить пост?", isPresented: $showDeleteAlert) {
+            Button("Удалить", role: .destructive) {
+                isDeleting = true
+                Task {
+                    _ = await PostManager.shared.deletePost(id: post.id)
+                }
+            }
+            Button("Отмена", role: .cancel) {}
+        } message: {
+            Text("Пост «\(post.title)» будет удалён навсегда.")
         }
     }
 }
