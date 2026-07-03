@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,500,1,0&display=swap" rel="stylesheet">
+  <meta name="design_doc_mode" content="canvas">
+  <style>
+    body { margin: 0; background: #EDE6D4; }
+    .msym { font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; word-wrap: normal; direction: ltr; -webkit-font-smoothing: antialiased; }
+    .msymf { font-family: 'Material Symbols Rounded'; font-variation-settings: 'FILL' 1; line-height: 1; -webkit-font-smoothing: antialiased; }
+  </style>
+</helmet>
+
+<section style="font-family:'YS Text Web',-apple-system,'Segoe UI',Roboto,sans-serif;background:#EDE6D4;min-height:100vh;padding:56px;box-sizing:border-box;color:#211D15">
+
+  <div style="max-width:1160px;margin:0 auto 40px">
+    <div style="font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#8C8571;margin-bottom:8px">Healthod &middot; Web-приложение (mobile-first)</div>
+    <div style="font-size:34px;font-weight:800;letter-spacing:-0.5px">Веб-версия — YS Text Web + Material Symbols</div>
+    <div style="font-size:15px;color:#68624F;margin-top:8px;max-width:680px;line-height:1.5">Та же информационная архитектура и палитра Healthod, адаптированная под мобильный веб: шрифт YS Text Web, иконки Material Symbols, нижняя навигация и FAB в духе Material.</div>
+  </div>
+
+  <div style="display:flex;gap:32px;align-items:flex-start;max-width:100%;overflow-x:auto;padding-bottom:20px">
+
+    <!-- WELCOME BACK -->
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:center;flex-shrink:0">
+      <span style="font-size:12px;font-weight:700;color:#8C8571;letter-spacing:0.5px;text-transform:uppercase">С возвращением</span>
+      <div style="width:390px;height:844px;background:linear-gradient(160deg,#4A6A4D,#2E4630);border-radius:20px;box-shadow:0 24px 50px rgba(40,32,15,0.16);overflow:hidden;display:flex;flex-direction:column;position:relative;color:#fff">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:32px">
+          <div style="width:96px;height:96px;border-radius:50%;background:linear-gradient(135deg,#D9E3D4,#F5DDCE);border:3px solid rgba(255,255,255,0.35)"></div>
+          <div style="text-align:center">
+            <div style="font-size:23px;font-weight:800;margin-bottom:6px">С возвращением, Артём</div>
+            <div style="font-size:13.5px;color:rgba(255,255,255,0.7)">Продолжите с того места, где остановились</div>
+          </div>
+        </div>
+        <div style="padding:0 28px 40px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;border-radius:14px;background:#fff;color:#2E4630;font-size:15px;font-weight:700"><span class="msym" style="font-size:20px">fingerprint</span>Продолжить</div>
+          <div style="text-align:center;font-size:13px;color:rgba(255,255,255,0.65);padding-top:4px">Не Артём? <span style="color:#fff;font-weight:700;text-decoration:underline">Сменить аккаунт</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTH: LOGIN / REGISTER -->
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:center;flex-shrink:0">
+      <span style="font-size:12px;font-weight:700;color:#8C8571;letter-spacing:0.5px;text-transform:uppercase">Вход / Регистрация</span>
+      <div style="width:390px;height:844px;background:#F4EFE3;border-radius:20px;box-shadow:0 24px 50px rgba(40,32,15,0.16);overflow:hidden;display:flex;flex-direction:column;position:relative">
+        <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;padding:64px 28px 0">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding-bottom:28px">
+            <div style="width:56px;height:56px;border-radius:16px;background:#3F5D42;display:flex;align-items:center;justify-content:center"><span class="msymf" style="font-size:28px;color:#fff">favorite</span></div>
+            <div style="font-size:22px;font-weight:800">Healthod</div>
+            <div style="font-size:13px;color:#8C8571">Тренировки, питание и настроение</div>
+          </div>
+
+          <div style="display:flex;background:#ECE5D3;border-radius:14px;padding:4px;margin-bottom:20px">
+            <div style="flex:1;text-align:center;padding:10px 0;border-radius:11px;background:#fff;font-size:14px;font-weight:700;box-shadow:0 2px 6px rgba(40,32,15,0.06)">Вход</div>
+            <div style="flex:1;text-align:center;padding:10px 0;border-radius:11px;font-size:14px;font-weight:700;color:#8C8571">Регистрация</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:14px 16px"><span class="msym" style="font-size:19px;color:#8C8571">mail</span><span style="font-size:14px;color:#B7AF98">Email</span></div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:14px 16px"><span class="msym" style="font-size:19px;color:#8C8571">lock</span><span style="font-size:14px;color:#B7AF98">Пароль</span><span class="msym" style="font-size:18px;color:#8C8571;margin-left:auto">visibility_off</span></div>
+            <div style="text-align:right;font-size:12.5px;color:#3F5D42;font-weight:700">Забыли пароль?</div>
+          </div>
+
+          <div style="padding-top:18px;display:flex;flex-direction:column;gap:12px">
+            <div style="padding:15px;border-radius:14px;background:#3F5D42;color:#fff;font-size:15px;font-weight:700;text-align:center">Войти</div>
+            <div style="display:flex;align-items:center;gap:12px;padding:2px 0"><div style="flex:1;height:1px;background:#E4DCC7"></div><span style="font-size:12px;color:#8C8571">или</span><div style="flex:1;height:1px;background:#E4DCC7"></div></div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:14px;background:#fff;border:1px solid #E4DCC7;font-size:14px;font-weight:700"><span class="msym" style="font-size:19px">favorite</span>Продолжить с Apple Health</div>
+          </div>
+        </div>
+        <div style="padding:20px 28px 34px;text-align:center;font-size:12.5px;color:#8C8571">Продолжая, вы принимаете <span style="color:#3F5D42;font-weight:700">условия использования</span></div>
+      </div>
+    </div>
+
+    <!-- NUTRITION -->
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:center;flex-shrink:0">
+      <span style="font-size:12px;font-weight:700;color:#8C8571;letter-spacing:0.5px;text-transform:uppercase">Питание</span>
+      <div style="width:390px;height:844px;background:#F4EFE3;border-radius:20px;box-shadow:0 24px 50px rgba(40,32,15,0.16);overflow:hidden;display:flex;flex-direction:column;position:relative">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:22px 20px 4px">
+          <span style="font-size:21px;font-weight:800">Healthod</span>
+          <span class="msym" style="font-size:26px;color:#211D15">notifications</span>
+        </div>
+        <div style="padding:6px 20px 0"><span style="font-size:13.5px;color:#8C8571;font-weight:500">Доброе утро, Артём &middot; 3 июля</span></div>
+
+        <div style="margin:16px 20px 0;background:#fff;border-radius:16px;padding:20px;box-shadow:0 1px 3px rgba(40,32,15,0.08),0 4px 12px rgba(40,32,15,0.05);display:flex;gap:18px;align-items:center">
+          <div style="width:100px;height:100px;border-radius:50%;background:conic-gradient(#3F5D42 0% 45.5%, #ECE5D3 45.5% 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <div style="width:76px;height:76px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center">
+              <span style="font-size:18px;font-weight:800">1000</span>
+              <span style="font-size:10px;color:#8C8571;font-weight:600">из 2200 ккал</span>
+            </div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:11px">
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:5px"><span>Белки</span><span style="color:#8C8571;font-weight:600">32/110 г</span></div><div style="height:6px;border-radius:3px;background:#ECE5D3"><div style="width:29%;height:100%;border-radius:3px;background:#587C5C"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:5px"><span>Жиры</span><span style="color:#8C8571;font-weight:600">32/70 г</span></div><div style="height:6px;border-radius:3px;background:#ECE5D3"><div style="width:46%;height:100%;border-radius:3px;background:#DE8768"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:5px"><span>Углеводы</span><span style="color:#8C8571;font-weight:600">98/220 г</span></div><div style="height:6px;border-radius:3px;background:#ECE5D3"><div style="width:44%;height:100%;border-radius:3px;background:#C89B3C"></div></div></div>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 20px 10px">
+          <span style="font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8C8571">Приёмы пищи</span>
+          <span style="font-size:12.5px;font-weight:700;color:#3F5D42;display:flex;align-items:center;gap:4px"><span class="msym" style="font-size:16px">add</span>Добавить</span>
+        </div>
+        <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;gap:10px;padding:0 20px 90px">
+          <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:13px 14px;box-shadow:0 1px 2px rgba(40,32,15,0.06)">
+            <div style="width:38px;height:38px;border-radius:10px;background:#D9E3D4;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="msym" style="font-size:20px;color:#3F5D42">breakfast_dining</span></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:700">Завтрак</div><div style="font-size:12px;color:#8C8571">Овсянка, банан, орехи</div></div>
+            <span style="font-size:12.5px;font-weight:700;color:#3F5D42">420 ккал</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:13px 14px;box-shadow:0 1px 2px rgba(40,32,15,0.06)">
+            <div style="width:38px;height:38px;border-radius:10px;background:#F5DDCE;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="msym" style="font-size:20px;color:#DE8768">lunch_dining</span></div>
+            <div style="flex:1"><div style="font-size:14px;font-weight:700">Обед</div><div style="font-size:12px;color:#8C8571">Курица, рис, овощи</div></div>
+            <span style="font-size:12.5px;font-weight:700;color:#3F5D42">580 ккал</span>
+          </div>
+          <div style="padding:13px;border-radius:14px;border:1.5px dashed #C7BE9E;color:#8C8571;font-size:13.5px;font-weight:700;text-align:center">+ Добавить ужин</div>
+        </div>
+
+        <div style="position:absolute;right:20px;bottom:96px;width:56px;height:56px;border-radius:16px;background:#3F5D42;box-shadow:0 6px 16px rgba(63,93,66,0.4);display:flex;align-items:center;justify-content:center"><span class="msym" style="font-size:26px;color:#fff">add</span></div>
+
+        <div style="display:flex;align-items:center;justify-content:space-around;padding:10px 8px 20px;background:#fff;border-top:1px solid #ECE5D3">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">home</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Лента</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">directions_run</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Тренировки</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px;background:#D9E3D4"><span class="msymf" style="font-size:24px;color:#3F5D42">restaurant</span><span style="font-size:10.5px;color:#3F5D42;font-weight:700">Питание</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">forum</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Чаты</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">account_circle</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Профиль</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEED -->
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:center;flex-shrink:0">
+      <span style="font-size:12px;font-weight:700;color:#8C8571;letter-spacing:0.5px;text-transform:uppercase">Лента</span>
+      <div style="width:390px;height:844px;background:#F4EFE3;border-radius:20px;box-shadow:0 24px 50px rgba(40,32,15,0.16);overflow:hidden;display:flex;flex-direction:column;position:relative">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:22px 20px 14px">
+          <span style="font-size:21px;font-weight:800">Healthod</span>
+          <div style="display:flex;gap:16px"><span class="msym" style="font-size:24px">search</span><span class="msym" style="font-size:24px">notifications</span></div>
+        </div>
+        <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;gap:14px;padding:0 20px 90px">
+          <div style="background:#fff;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:11px;box-shadow:0 1px 3px rgba(40,32,15,0.08),0 4px 12px rgba(40,32,15,0.05)">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:40px;height:40px;border-radius:50%;background:#D9E3D4"></div>
+              <div style="flex:1"><div style="font-size:14px;font-weight:700">Лихачёв Сергей</div><div style="font-size:11.5px;color:#8C8571">2 часа назад &middot; Бег</div></div>
+              <span class="msym" style="font-size:20px;color:#8C8571">more_horiz</span>
+            </div>
+            <div style="font-size:15px;font-weight:700">Какой чудесный день!</div>
+            <div style="font-size:13.5px;line-height:1.5;color:#5C5745">Я сегодня проснулся с эмоцией, что я создан бегать.. я просто, я только бегаю бегаю бегаю и бегаю</div>
+            <div style="width:100%;height:170px;border-radius:14px;background:#ECE5D3;display:flex;align-items:center;justify-content:center"><span class="msym" style="font-size:34px;color:#C7BE9E">image</span></div>
+            <div style="display:flex;gap:22px;padding-top:10px;border-top:1px solid #F0EADA">
+              <div style="display:flex;align-items:center;gap:6px"><span class="msym" style="font-size:20px;color:#DE8768">favorite</span><span style="font-size:13px;font-weight:700">123</span></div>
+              <div style="display:flex;align-items:center;gap:6px"><span class="msym" style="font-size:20px;color:#8C8571">chat_bubble</span><span style="font-size:13px;font-weight:700">15</span></div>
+              <div style="display:flex;align-items:center;gap:6px;margin-left:auto"><span class="msym" style="font-size:20px;color:#8C8571">ios_share</span></div>
+            </div>
+          </div>
+          <div style="background:#fff;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:11px;box-shadow:0 1px 3px rgba(40,32,15,0.08),0 4px 12px rgba(40,32,15,0.05)">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:40px;height:40px;border-radius:50%;background:#F5DDCE"></div>
+              <div style="flex:1"><div style="font-size:14px;font-weight:700">Марина Волкова</div><div style="font-size:11.5px;color:#8C8571">5 часов назад &middot; Йога</div></div>
+              <span class="msym" style="font-size:20px;color:#8C8571">more_horiz</span>
+            </div>
+            <div style="font-size:15px;font-weight:700">30 минут растяжки утром</div>
+            <div style="font-size:13.5px;line-height:1.5;color:#5C5745">Тело благодарит за каждую минуту. Завтра в 8:00 разбираем позу голубя.</div>
+            <div style="display:flex;gap:22px"><div style="display:flex;align-items:center;gap:6px"><span class="msym" style="font-size:20px;color:#DE8768">favorite</span><span style="font-size:13px;font-weight:700">76</span></div><div style="display:flex;align-items:center;gap:6px"><span class="msym" style="font-size:20px;color:#8C8571">chat_bubble</span><span style="font-size:13px;font-weight:700">9</span></div></div>
+          </div>
+        </div>
+        <div style="position:absolute;right:20px;bottom:96px;width:56px;height:56px;border-radius:16px;background:#3F5D42;box-shadow:0 6px 16px rgba(63,93,66,0.4);display:flex;align-items:center;justify-content:center"><span class="msym" style="font-size:26px;color:#fff">add</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-around;padding:10px 8px 20px;background:#fff;border-top:1px solid #ECE5D3">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px;background:#D9E3D4"><span class="msymf" style="font-size:24px;color:#3F5D42">home</span><span style="font-size:10.5px;color:#3F5D42;font-weight:700">Лента</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">directions_run</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Тренировки</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">restaurant</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Питание</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">forum</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Чаты</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">account_circle</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Профиль</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHATS -->
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:center;flex-shrink:0">
+      <span style="font-size:12px;font-weight:700;color:#8C8571;letter-spacing:0.5px;text-transform:uppercase">Чаты</span>
+      <div style="width:390px;height:844px;background:#F4EFE3;border-radius:20px;box-shadow:0 24px 50px rgba(40,32,15,0.16);overflow:hidden;display:flex;flex-direction:column;position:relative">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:22px 20px 14px">
+          <span style="font-size:21px;font-weight:800">Healthod</span>
+          <span class="msym" style="font-size:24px">edit_square</span>
+        </div>
+        <div style="padding:0 20px 12px"><div style="display:flex;align-items:center;gap:8px;background:#fff;border-radius:12px;padding:10px 14px"><span class="msym" style="font-size:18px;color:#8C8571">search</span><span style="font-size:13px;color:#B7AF98">Поиск</span></div></div>
+        <div style="display:flex;padding:0 20px 12px;gap:8px">
+          <div style="padding:7px 16px;border-radius:100px;background:#3F5D42;color:#fff;font-size:12.5px;font-weight:700">Личные</div>
+          <div style="padding:7px 16px;border-radius:100px;background:#ECE5D3;color:#8C8571;font-size:12.5px;font-weight:700">Сообщества</div>
+        </div>
+        <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;gap:9px;padding:0 20px 90px">
+          <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:13px;box-shadow:0 1px 2px rgba(40,32,15,0.06)">
+            <div style="position:relative;flex-shrink:0"><div style="width:46px;height:46px;border-radius:50%;background:#D9E3D4"></div><div style="position:absolute;bottom:0;right:0;width:12px;height:12px;border-radius:50%;background:#5BA267;border:2px solid #fff"></div></div>
+            <div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between"><span style="font-size:14.5px;font-weight:700">Шутов Артём</span><span style="font-size:11px;color:#B7AF98">12:32</span></div><div style="font-size:12.5px;color:#8C8571;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Поешь ещё вкусных овощей.. Идём гулять?</div></div>
+            <div style="width:19px;height:19px;border-radius:50%;background:#DE8768;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:13px;box-shadow:0 1px 2px rgba(40,32,15,0.06)">
+            <div style="width:46px;height:46px;border-radius:50%;background:#F5DDCE;flex-shrink:0"></div>
+            <div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between"><span style="font-size:14.5px;font-weight:700">Марина Волкова</span><span style="font-size:11px;color:#B7AF98">вчера</span></div><div style="font-size:12.5px;color:#8C8571;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Скинь план тренировок на неделю</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:16px;padding:13px;box-shadow:0 1px 2px rgba(40,32,15,0.06)">
+            <div style="width:46px;height:46px;border-radius:50%;background:#ECE5D3;flex-shrink:0"></div>
+            <div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between"><span style="font-size:14.5px;font-weight:700">Йога-клуб</span><span style="font-size:11px;color:#B7AF98">вчера</span></div><div style="font-size:12.5px;color:#8C8571;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Аня: жду всех в субботу в 9:00</div></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-around;padding:10px 8px 20px;background:#fff;border-top:1px solid #ECE5D3">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">home</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Лента</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">directions_run</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Тренировки</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">restaurant</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Питание</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px;background:#D9E3D4"><span class="msymf" style="font-size:24px;color:#3F5D42">forum</span><span style="font-size:10.5px;color:#3F5D42;font-weight:700">Чаты</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">account_circle</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Профиль</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORKOUT -->
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:center;flex-shrink:0">
+      <span style="font-size:12px;font-weight:700;color:#8C8571;letter-spacing:0.5px;text-transform:uppercase">Тренировки</span>
+      <div style="width:390px;height:844px;background:#F4EFE3;border-radius:20px;box-shadow:0 24px 50px rgba(40,32,15,0.16);overflow:hidden;display:flex;flex-direction:column;position:relative">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:22px 20px 14px">
+          <span style="font-size:21px;font-weight:800">Healthod</span>
+          <span class="msym" style="font-size:24px">calendar_month</span>
+        </div>
+        <div style="padding:0 20px 16px">
+          <div style="background:#3F5D42;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;color:#fff">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12.5px;font-weight:600;opacity:0.85">Эта неделя</span><span style="font-size:13px;font-weight:700">1240 ккал &middot; 5 тренировок</span></div>
+            <div style="display:flex;align-items:flex-end;gap:7px;height:58px">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:13px;height:24px;border-radius:5px;background:rgba(255,255,255,0.35)"></div><span style="font-size:10px;opacity:0.75">П</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:13px;height:36px;border-radius:5px;background:rgba(255,255,255,0.35)"></div><span style="font-size:10px;opacity:0.75">В</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:13px;height:30px;border-radius:5px;background:rgba(255,255,255,0.35)"></div><span style="font-size:10px;opacity:0.75">С</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:13px;height:46px;border-radius:5px;background:rgba(255,255,255,0.35)"></div><span style="font-size:10px;opacity:0.75">Ч</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:13px;height:33px;border-radius:5px;background:rgba(255,255,255,0.35)"></div><span style="font-size:10px;opacity:0.75">П</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:13px;height:50px;border-radius:5px;background:#fff"></div><span style="font-size:10px;font-weight:700">С</span></div>
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:13px;height:16px;border-radius:5px;background:rgba(255,255,255,0.35)"></div><span style="font-size:10px;opacity:0.75">В</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;padding:0 20px 90px">
+          <div style="display:flex;justify-content:space-between;padding-bottom:10px"><span style="font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8C8571">Сегодня</span><span style="font-size:12.5px;font-weight:700;color:#3F5D42">360 ккал</span></div>
+          <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:16px">
+            <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:13px 14px;box-shadow:0 1px 2px rgba(40,32,15,0.06)"><div style="width:36px;height:36px;border-radius:10px;background:#D9E3D4;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="msym" style="font-size:18px;color:#3F5D42">fitness_center</span></div><div style="flex:1"><div style="font-size:14px;font-weight:700">Приседания</div><div style="font-size:12px;color:#8C8571">4 подхода &times; 12</div></div><span style="font-size:12.5px;font-weight:700;color:#3F5D42">120 ккал</span></div>
+            <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:13px 14px;box-shadow:0 1px 2px rgba(40,32,15,0.06)"><div style="width:36px;height:36px;border-radius:10px;background:#D9E3D4;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="msym" style="font-size:18px;color:#3F5D42">fitness_center</span></div><div style="flex:1"><div style="font-size:14px;font-weight:700">Отжимания</div><div style="font-size:12px;color:#8C8571">3 подхода &times; 15</div></div><span style="font-size:12.5px;font-weight:700;color:#3F5D42">95 ккал</span></div>
+            <div style="padding:12px;border-radius:14px;border:1.5px dashed #C7BE9E;color:#8C8571;font-size:13px;font-weight:700;text-align:center">+ Добавить упражнение</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-bottom:10px"><span style="font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8C8571">Вчера</span><span style="font-size:12.5px;font-weight:700;color:#3F5D42">240 ккал</span></div>
+          <div style="display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;padding:13px 14px;box-shadow:0 1px 2px rgba(40,32,15,0.06)"><div style="width:36px;height:36px;border-radius:10px;background:#D9E3D4;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span class="msym" style="font-size:18px;color:#3F5D42">fitness_center</span></div><div style="flex:1"><div style="font-size:14px;font-weight:700">Приседания</div><div style="font-size:12px;color:#8C8571">4 подхода &times; 12</div></div><span style="font-size:12.5px;font-weight:700;color:#3F5D42">120 ккал</span></div>
+        </div>
+        <div style="position:absolute;right:20px;bottom:96px;width:56px;height:56px;border-radius:16px;background:#3F5D42;box-shadow:0 6px 16px rgba(63,93,66,0.4);display:flex;align-items:center;justify-content:center"><span class="msym" style="font-size:26px;color:#fff">add</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-around;padding:10px 8px 20px;background:#fff;border-top:1px solid #ECE5D3">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">home</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Лента</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px;background:#D9E3D4"><span class="msymf" style="font-size:24px;color:#3F5D42">directions_run</span><span style="font-size:10.5px;color:#3F5D42;font-weight:700">Тренировки</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">restaurant</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Питание</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">forum</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Чаты</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">account_circle</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Профиль</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div style="display:flex;flex-direction:column;gap:14px;align-items:center;flex-shrink:0">
+      <span style="font-size:12px;font-weight:700;color:#8C8571;letter-spacing:0.5px;text-transform:uppercase">Профиль</span>
+      <div style="width:390px;height:844px;background:#F4EFE3;border-radius:20px;box-shadow:0 24px 50px rgba(40,32,15,0.16);overflow:hidden;display:flex;flex-direction:column;position:relative">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:22px 20px 6px">
+          <span style="font-size:21px;font-weight:800">Healthod</span>
+          <span class="msym" style="font-size:24px">settings</span>
+        </div>
+        <div style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 20px 0">
+            <div style="width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,#D9E3D4,#F5DDCE)"></div>
+            <div style="font-size:19px;font-weight:800;margin-top:4px">Шутов Артём</div>
+            <div style="font-size:12.5px;color:#8C8571">Бегаю по утрам &middot; в Healthod с марта 2026</div>
+            <div style="display:flex;gap:10px;padding-top:12px">
+              <div style="padding:9px 20px;border-radius:100px;background:#3F5D42;color:#fff;font-size:12.5px;font-weight:700">Редактировать</div>
+              <div style="padding:9px 20px;border-radius:100px;background:#ECE5D3;color:#211D15;font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:5px"><span class="msym" style="font-size:16px">ios_share</span>Поделиться</div>
+            </div>
+            <div style="display:flex;gap:34px;padding:18px 0 4px">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px;font-weight:800">42</span><span style="font-size:11.5px;color:#8C8571">Тренировки</span></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px;font-weight:800">18</span><span style="font-size:11.5px;color:#8C8571">Посты</span></div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><span style="font-size:18px;font-weight:800">210</span><span style="font-size:11.5px;color:#8C8571">Подписчики</span></div>
+            </div>
+          </div>
+          <div style="padding:16px 20px 8px;font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8C8571">Достижения</div>
+          <div style="display:flex;gap:14px;padding:0 20px 6px">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#587C5C,#3F5D42);display:flex;align-items:center;justify-content:center"><span class="msymf" style="font-size:22px;color:#fff">military_tech</span></div><span style="font-size:10.5px;font-weight:600;color:#8C8571;text-align:center;max-width:70px">Первая тренировка</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#DE8768,#C89B3C);display:flex;align-items:center;justify-content:center"><span class="msymf" style="font-size:22px;color:#fff">local_fire_department</span></div><span style="font-size:10.5px;font-weight:600;color:#8C8571;text-align:center;max-width:70px">7 дней подряд</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.4"><div style="width:50px;height:50px;border-radius:50%;background:#ECE5D3;display:flex;align-items:center;justify-content:center"><span class="msym" style="font-size:22px;color:#8C8571">group</span></div><span style="font-size:10.5px;font-weight:600;color:#8C8571;text-align:center;max-width:70px">100 подписчиков</span></div>
+          </div>
+          <div style="padding:16px 20px 8px;font-size:11.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8C8571">Синхронизация</div>
+          <div style="display:flex;flex-direction:column;gap:9px;padding:0 20px 12px;overflow:hidden">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 14px;background:#fff;border-radius:14px;box-shadow:0 1px 2px rgba(40,32,15,0.06)"><span style="font-size:14px;font-weight:700">Apple Health</span><div style="width:42px;height:24px;border-radius:12px;background:#3F5D42;position:relative"><div style="position:absolute;top:2px;left:20px;width:20px;height:20px;border-radius:50%;background:#fff"></div></div></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 14px;background:#fff;border-radius:14px;box-shadow:0 1px 2px rgba(40,32,15,0.06)"><span style="font-size:14px;font-weight:700">Samsung Health</span><div style="width:42px;height:24px;border-radius:12px;background:#E4DCC7;position:relative"><div style="position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff"></div></div></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-around;padding:10px 8px 20px;background:#fff;border-top:1px solid #ECE5D3">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">home</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Лента</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">directions_run</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Тренировки</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">restaurant</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Питание</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px"><span class="msym" style="font-size:24px;color:#8C8571">forum</span><span style="font-size:10.5px;color:#8C8571;font-weight:600">Чаты</span></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 16px;border-radius:20px;background:#D9E3D4"><span class="msymf" style="font-size:24px;color:#3F5D42">account_circle</span><span style="font-size:10.5px;color:#3F5D42;font-weight:700">Профиль</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,106 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 25px 25px 85px 25px;
+    box-sizing: border-box;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: var(--surface);
+    border-top: 1px solid var(--line);
+    padding: 10px 0;
+    box-shadow: 0 -4px 16px rgba(33, 29, 21, 0.04);
+    z-index: 1000;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.appName {
+    font-size: var(--fs-h1);
+    font-weight: var(--fw-display);
+}
+
+.layoutButtons {
+    display: flex;
+    gap: 25px
+}
+
+.navButton {
+    border-radius: 15px;
+    padding: 5px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-main);
+    font-size: var(--fs-label);
+    color: var(--inf-soft);
+    transition: color 0.2s ease;
+}
+
+.navButton:hover {
+    color: var(--ink);
+}
+
+.btnIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+}
+
+.btnLabel {
+    font-size: 10.5px;
+    font-weight: 500;
+}
+
+.active {
+    color: var(--green-dark) !important;
+    font-weight: var(--fw-display) !important;
+    background: var(--green-soft);
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    background: var(--surface);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.chatRoomLayout {
+    padding: 0 !important;
+    min-height: 100vh;
+}
+
+.editBtn {
+    background: none;
+    border: none;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.editBtn:hover {
+    background-color: var(--surface-muted);
+}

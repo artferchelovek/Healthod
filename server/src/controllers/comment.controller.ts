@@ -25,7 +25,7 @@ export const createComment = async (req: Request, res: Response) => {
 
     if (!post) {
       return res.status(404).json({
-        error: "Post not found",
+        error: "PostCard not found",
       });
     }
 

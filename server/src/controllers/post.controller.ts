@@ -124,7 +124,7 @@ export const getPostById = async (req: Request, res: Response) => {
 
     if (!post) {
       return res.status(404).json({
-        error: "Post not found",
+        error: "PostCard not found",
       });
     }
 
@@ -160,7 +160,7 @@ export const deletePost = async (req: Request, res: Response) => {
 
     if (!post) {
       return res.status(404).json({
-        error: "Post not found",
+        error: "PostCard not found",
       });
     }
 
@@ -175,7 +175,7 @@ export const deletePost = async (req: Request, res: Response) => {
     });
 
     return res.json({
-      message: "Post deleted",
+      message: "PostCard deleted",
     });
   } catch (error) {
     console.error(error);

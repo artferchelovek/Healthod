@@ -41,11 +41,24 @@ services:
       - ./server/.env
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public"
+    volumes:
+      - health_uploads:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
       db-sync:
         condition: service_completed_successfully
 
+  frontend:
+    build:
+      context: ./client
+    container_name: health-frontend
+    restart: always
+    ports:
+      - "8000:80"
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:
+  health_uploads:
