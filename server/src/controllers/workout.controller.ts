@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
+import { checkAndUnlockAchievements } from "./achievement.controller";
 
 export const createWorkout = async (req: Request, res: Response) => {
   try {
@@ -21,6 +22,8 @@ export const createWorkout = async (req: Request, res: Response) => {
         exercises: true,
       },
     });
+
+    checkAndUnlockAchievements(req.user.userId);
 
     return res.status(201).json(workout);
   } catch (error) {

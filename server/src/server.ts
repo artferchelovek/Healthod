@@ -13,6 +13,9 @@ import { loggerMiddleware } from "./middleware/logger.middleware";
 import path from "path";
 import uploadRoutes from "./routes/upload.routes";
 import foodRoutes from "./routes/food.routes";
+import moodRoutes from "./routes/mood.routes";
+import achievementRoutes from "./routes/achievement.routes";
+import profileRoutes from "./routes/profile.routes";
 
 dotenv.config();
 
@@ -41,6 +44,9 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/exercises", exerciseRoutes);
 app.use("/api/workouts", workoutRoutes);
 app.use("/api/food", foodRoutes);
+app.use("/api/mood", moodRoutes);
+app.use("/api/achievements", achievementRoutes);
+app.use("/api/profile", profileRoutes);
 
 const uploadsPath = path.join(__dirname, "../uploads");
 

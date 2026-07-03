@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
+import { checkAndUnlockAchievements } from "./achievement.controller";
 
 export const likePost = async (req: Request, res: Response) => {
   try {
@@ -53,6 +54,8 @@ export const likePost = async (req: Request, res: Response) => {
         likesCount: true,
       },
     });
+
+    checkAndUnlockAchievements(post.authorId);
 
     return res.json({
       message: "PostCard liked",
