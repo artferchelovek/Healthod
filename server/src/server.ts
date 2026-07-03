@@ -10,6 +10,8 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger";
 import workoutRoutes from "./routes/workout.routes";
 import { loggerMiddleware } from "./middleware/logger.middleware";
+import path from "path";
+import uploadRoutes from "./routes/upload.routes";
 
 dotenv.config();
 
@@ -18,6 +20,7 @@ const PORT = Number(process.env.PORT) || 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use(loggerMiddleware);
 app.use(
   "/docs",
@@ -26,8 +29,14 @@ app.use(
     explorer: true,
   }),
 );
+app.get("/docs-json", (_, res) => {
+  res.json(swaggerSpec);
+});
+
+
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/upload", uploadRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/exercises", exerciseRoutes);
 app.use("/api/workouts", workoutRoutes);
