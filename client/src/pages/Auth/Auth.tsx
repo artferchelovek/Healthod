@@ -55,10 +55,8 @@ export default function Auth() {
   const handleRegisterSubmit = async (data: any) => {
     try {
       setError(null);
-      // Сначала регистрируем
       await api.post("/auth/register", data);
 
-      // Сразу выполняем вход после регистрации, чтобы пользователю не пришлось логиниться вручную
       const loginResponse = await api.post("/auth/login", {
         email: data.email,
         password: data.password,
@@ -73,7 +71,7 @@ export default function Auth() {
   };
 
   const handleTabChange = () => {
-    setError(null); // Очищаем ошибку при переключении вкладок
+    setError(null);
     setIsLogin(!isLogin);
   };
 
