@@ -11,6 +11,8 @@ import Profile from "@/pages/Profile/Profile.tsx";
 import Nutrition from "@/pages/Nutrition/Nutrition.tsx";
 import Workouts from "@/pages/Workouts/Workouts.tsx";
 import Post from "@/pages/Post/Post.tsx";
+import Mood from "@/pages/Mood/Mood.tsx";
+import Search from "@/pages/Search/Search.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -25,6 +27,8 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/profile" element={<Profile />} />
             <Route path="/nutrition" element={<Nutrition />} />
             <Route path="/workouts" element={<Workouts />} />
+            <Route path="/mood" element={<Mood />} />
+            <Route path="/search" element={<Search />} />
             {/* Динамический ID поста перемещен вниз, чтобы не перехватывать другие роуты */}
             <Route path="/:id" element={<Post />} />
           </Route>

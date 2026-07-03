@@ -342,3 +342,27 @@
     font-size: var(--fs-body);
     text-align: center;
 }
+
+.exActions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.exDeleteBtn {
+    background: none;
+    border: none;
+    color: var(--inf-soft);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.exDeleteBtn:hover {
+    color: var(--terracotta);
+    background: var(--terracotta-soft);
+}
