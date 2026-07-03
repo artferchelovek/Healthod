@@ -11,6 +11,5 @@
 #back
 
 /server/node_modules
-/server/.env.docker
-/server/.env.local
 /server/.env
+/server/prisma/migrations
