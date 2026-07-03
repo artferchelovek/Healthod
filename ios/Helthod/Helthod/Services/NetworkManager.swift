@@ -7,11 +7,22 @@ static let shared = NetworkManager()
     
     private var baseURL: String = "https://temp.lilv2dim.ru/api"
     
-    enum NetworkError: Error {
+    enum NetworkError: Error, LocalizedError {
         case badURL
         case invalidResponse
         case decodingError
         case unauthorized
+        case serverError(String)
+
+        var errorDescription: String? {
+            switch self {
+            case .badURL: return "Неверный URL"
+            case .invalidResponse: return "Ошибка сервера"
+            case .decodingError: return "Ошибка обработки данных"
+            case .unauthorized: return "Требуется авторизация"
+            case .serverError(let msg): return msg
+            }
+        }
     }
   
     private func addAuthHeader(to request: inout URLRequest) {
@@ -36,10 +47,14 @@ static let shared = NetworkManager()
         }
         
         guard (200...299).contains(httpResponse.statusCode) else {
-            if let errorBody = String(data: data, encoding: .utf8) {
-                print("❌ Тело ответа с ошибкой: \(errorBody)")
+            let errorBody = String(data: data, encoding: .utf8) ?? ""
+            print("❌ Тело ответа с ошибкой: \(errorBody)")
+
+            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: String],
+               let msg = json["error"] ?? json["message"] {
+                throw NetworkError.serverError(msg)
             }
-            throw NetworkError.invalidResponse
+            throw NetworkError.serverError(errorBody)
         }
     }
     
@@ -72,6 +87,24 @@ static let shared = NetworkManager()
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 30
+        addAuthHeader(to: &request)
+        
+        let encoder = JSONEncoder()
+        request.httpBody = try encoder.encode(body)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try handleResponse(response, data: data)
+    }
+
+    func sendPatch<RequestBody: Encodable>(endpoint: String, body: RequestBody) async throws {
+        guard let url = URL(string: "\(baseURL)\(endpoint)") else {
+            throw NetworkError.badURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.timeoutInterval = 30
         addAuthHeader(to: &request)
@@ -146,6 +179,26 @@ static let shared = NetworkManager()
         throw NetworkError.invalidResponse
     }
     
+    func patch<RequestBody: Encodable, ResponseBody: Decodable>(endpoint: String, body: RequestBody) async throws -> ResponseBody {
+        guard let url = URL(string: "\(baseURL)\(endpoint)") else {
+            throw NetworkError.badURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 30
+        addAuthHeader(to: &request)
+        
+        let encoder = JSONEncoder()
+        request.httpBody = try encoder.encode(body)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try handleResponse(response, data: data)
+    
+        return try JSONDecoder().decode(ResponseBody.self, from: data)
+    }
+
     func delete<RequestBody: Encodable, ResponseBody: Decodable>(endpoint: String, body: RequestBody) async throws -> ResponseBody {
         guard let url = URL(string: "\(baseURL)\(endpoint)") else {
             throw NetworkError.badURL
