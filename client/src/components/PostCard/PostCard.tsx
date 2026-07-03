@@ -8,7 +8,7 @@ import HeartFilled from "@/assets/icons/heart_favourite_filled.svg?react";
 import CommentIcon from "@/assets/icons/comment.svg?react";
 import { useNavigate } from "react-router-dom";
 
-function Top(props: { author: any; dateString: string }) {
+function Top(props: { author: any; dateString: string | Date }) {
   return (
     <div className={styles.top}>
       {props.author.avatarUrl ? (
@@ -18,7 +18,7 @@ function Top(props: { author: any; dateString: string }) {
       )}
       <div className={styles.userInfo}>
         <p className={styles.name}> {props.author.username} </p>
-        <p className={styles.date}> {formatRelativeTime(props.dateString)} </p>
+        <p className={styles.date}> {formatRelativeTime(new Date(props.dateString))} </p>
       </div>
     </div>
   );
@@ -72,7 +72,7 @@ export default function PostCard({ post }: { post: PostWithAuthor }) {
       <Content
         title={post.title}
         content={post.content}
-        imageUrl={post.imageUrl ? `${import.meta.env.VITE_API_URL}${post.imageUrl}` : null}
+        imageUrl={`${import.meta.env.VITE_API_URL}${post.imageUrl}`}
       />
 
       <div className={styles.footer}>
@@ -94,7 +94,6 @@ export default function PostCard({ post }: { post: PostWithAuthor }) {
           onClick={() => {
             navigate(`/${post.id}`);
           }}
-          style={{ cursor: "pointer" }}
         >
           <CommentIcon fill="var(--inf-soft)" width={20} height={20} />
           <p>{post.commentsCount}</p>

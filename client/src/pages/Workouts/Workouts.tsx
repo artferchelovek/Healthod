@@ -6,7 +6,7 @@ import WorkoutIcon from "@/assets/icons/workout.svg?react";
 import PlusIcon from "@/assets/icons/plus.svg?react";
 import Modal from "@/components/Modal/Modal";
 
-const isToday = (dateString: string) => {
+const isToday = (dateString: string | Date) => {
   const date = new Date(dateString);
   const today = new Date();
   return (
@@ -16,7 +16,7 @@ const isToday = (dateString: string) => {
   );
 };
 
-const isYesterday = (dateString: string) => {
+const isYesterday = (dateString: string | Date) => {
   const date = new Date(dateString);
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);

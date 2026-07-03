@@ -20,11 +20,13 @@ createRoot(document.getElementById("root")!).render(
         <Route element={<ProtectedRoute />}>
           <Route element={<Layout />}>
             <Route path="/" element={<Main />} />
-            <Route path="/:id" element={<Post />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/chat/:id" element={<Chat />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/nutrition" element={<Nutrition />} />
             <Route path="/workouts" element={<Workouts />} />
+            {/* Динамический ID поста перемещен вниз, чтобы не перехватывать другие роуты */}
+            <Route path="/:id" element={<Post />} />
           </Route>
         </Route>
       </Routes>

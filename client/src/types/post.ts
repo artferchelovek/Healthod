@@ -1,6 +1,5 @@
 import type { Prisma } from "@prisma-types";
 
-// Тип поста с включенным автором, выведенный напрямую из схемы бэкенда
 export type PostWithAuthor = Prisma.PostGetPayload<{
   include: {
     author: {
@@ -11,9 +10,10 @@ export type PostWithAuthor = Prisma.PostGetPayload<{
       };
     };
   };
-}>;
+}> & {
+  isLiked: boolean;
+};
 
-// Тип комментария с включенным автором
 export type CommentWithAuthor = Prisma.CommentGetPayload<{
   include: {
     author: {

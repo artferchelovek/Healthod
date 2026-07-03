@@ -1,9 +1,8 @@
-
 .layout {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding: 25px 25px 85px 25px; /* Резервируем место под фиксированный футер */
+    padding: 25px 25px 85px 25px;
     box-sizing: border-box;
 }
 
@@ -81,4 +80,27 @@ footer {
     background: var(--surface);
     padding: 10px;
     border-radius: 10px;
+}
+
+.chatRoomLayout {
+    padding: 0 !important;
+    min-height: 100vh;
+}
+
+.editBtn {
+    background: none;
+    border: none;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.editBtn:hover {
+    background-color: var(--surface-muted);
 }

@@ -6,17 +6,29 @@ import Notification from "@/assets/icons/notification.svg?react";
 import Home from "@/assets/icons/home.svg?react";
 import Workout from "@/assets/icons/workout.svg?react";
 import Nutrition from "@/assets/icons/fork.svg?react";
-import Chat from "@/assets/icons/chat.svg?react";
+import ChatIcon from "@/assets/icons/chat.svg?react";
 import Account from "@/assets/icons/account.svg?react";
 
 function Header() {
+  const location = useLocation();
+  const isChatTab = location.pathname === "/chat";
+
   return (
     <header>
       <p className={styles.appName}>Healthod</p>
-      <div className={styles.layoutButtons}>
-        <Search fill="var(--ink)" />
-        <Notification fill="var(--ink)" />
-      </div>
+      {isChatTab ? (
+        <button className={styles.editBtn} aria-label="Новый чат">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z" />
+          </svg>
+        </button>
+      ) : (
+        <div className={styles.layoutButtons}>
+          <Search fill="var(--ink)" />
+          <Notification fill="var(--ink)" />
+        </div>
+      )}
     </header>
   );
 }
@@ -57,7 +69,7 @@ function Footer() {
       <FooterButton to="/nutrition" icon={<Nutrition width={22} height={22} fill="currentColor" />}>
         Питание
       </FooterButton>
-      <FooterButton to="/chat" icon={<Chat width={22} height={22} fill="currentColor" />}>
+      <FooterButton to="/chat" icon={<ChatIcon width={22} height={22} fill="currentColor" />}>
         Чаты
       </FooterButton>
       <FooterButton to="/profile" icon={<Account width={22} height={22} fill="currentColor" />}>
@@ -68,11 +80,14 @@ function Footer() {
 }
 
 export default function Layout() {
+  const location = useLocation();
+  const isChatRoom = /^\/chat\/[^\/]+$/.test(location.pathname);
+
   return (
-    <div className={styles.layout}>
-      <Header />
+    <div className={`${styles.layout} ${isChatRoom ? styles.chatRoomLayout : ""}`}>
+      {!isChatRoom && <Header />}
       <Outlet />
-      <Footer />
+      {!isChatRoom && <Footer />}
     </div>
   );
 }

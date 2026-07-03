@@ -10,6 +10,7 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
       "@assets": fileURLToPath(new URL("./src/assets", import.meta.url)),
+      "@prisma-types": fileURLToPath(new URL("../server/node_modules/@prisma/client", import.meta.url)),
     },
   },
   server: {
