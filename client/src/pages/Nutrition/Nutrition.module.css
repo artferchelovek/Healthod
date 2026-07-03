@@ -1,0 +1,484 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    animation: fadeIn 0.4s ease-out;
+    box-sizing: border-box;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Приветственный баннер */
+.greetingBanner {
+    padding: 6px 0 0 0;
+    font-size: 13.5px;
+    color: #8C8571;
+    font-weight: 500;
+}
+
+/* Главная карточка калорий и БЖУ */
+.dashboardCard {
+    margin: 16px 0 0 0;
+    background-color: var(--surface);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(40, 32, 15, 0.08), 
+                0 4px 12px rgba(40, 32, 15, 0.05);
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    border: 1px solid var(--line);
+}
+
+.circleWrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.circleProgress {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.circleCenter {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background-color: var(--surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.caloriesCount {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.1;
+}
+
+.caloriesTotal {
+    font-size: 10px;
+    color: #8C8571;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+/* Список БЖУ */
+.macrosList {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.macroRow {
+    display: flex;
+    flex-direction: column;
+}
+
+.macroHeader {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: var(--ink);
+}
+
+.macroNumbers {
+    color: #8C8571;
+    font-weight: 600;
+}
+
+.macroBar {
+    height: 6px;
+    border-radius: 3px;
+    background-color: #ECE5D3;
+    overflow: hidden;
+    width: 100%;
+}
+
+.macroFill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease-out;
+}
+
+/* Карточка ИИ-Ассистента (размещаем аккуратно под основной) */
+.assistantCard {
+    margin-top: 14px;
+    background: linear-gradient(135deg, var(--surface) 0%, rgba(244, 239, 227, 0.4) 100%);
+    border-color: rgba(200, 155, 60, 0.25);
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid rgba(200, 155, 60, 0.2);
+    box-shadow: 0 1px 3px rgba(40, 32, 15, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.assistantHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sparkleIcon {
+    color: var(--mustard);
+    animation: pulseSparkle 2s infinite ease-in-out;
+}
+
+@keyframes pulseSparkle {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+    50% { transform: scale(1.15) rotate(10deg); opacity: 1; }
+}
+
+.assistantTitle {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--ink);
+}
+
+.assistantBody {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.assistantReasoning {
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--inf-soft);
+    background-color: rgba(255,255,255,0.6);
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(200, 155, 60, 0.08);
+}
+
+.calculateBtn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--mustard) 0%, #a87e2a 100%);
+    color: var(--surface);
+    border: none;
+    border-radius: 12px;
+    padding: 10px;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(200, 155, 60, 0.12);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.calculateBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(200, 155, 60, 0.2);
+}
+
+.resetBtn {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--inf-soft);
+    border-radius: 12px;
+    padding: 6px;
+    font-family: var(--font-main);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.resetBtn:hover {
+    background-color: var(--surface-muted);
+    color: var(--ink);
+}
+
+/* Лоадер */
+.loaderWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 0;
+}
+
+.miniLoader {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--surface-muted);
+    border-top-color: var(--mustard);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Секция приемов пищи */
+.mealsSectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0 10px 0;
+}
+
+.mealsTitle {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #8C8571;
+}
+
+.addGlobalBtn {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--green-dark);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.mealsList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 90px;
+}
+
+/* Заполненная карточка приема пищи */
+.mealCard {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: var(--surface);
+    border-radius: 14px;
+    padding: 13px 14px;
+    box-shadow: 0 1px 2px rgba(40, 32, 15, 0.06);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mealCard:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(40, 32, 15, 0.08);
+}
+
+.mealIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Цвета иконок */
+.breakfastBg { background-color: #D9E3D4; color: #3F5D42; }
+.lunchBg { background-color: #F5DDCE; color: #DE8768; }
+.dinnerBg { background-color: #ECE5D3; color: #8C8571; }
+.snackBg { background-color: #F5DDCE; color: #C89B3C; }
+
+.mealContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.mealName {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+}
+
+.mealDescription {
+    font-size: 12px;
+    color: #8C8571;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mealCalories {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--green-dark);
+}
+
+/* Пустая/Дашед карточка */
+.emptyMealPlaceholder {
+    padding: 13px;
+    border-radius: 14px;
+    border: 1.5px dashed #C7BE9E;
+    color: #8C8571;
+    font-size: 13.5px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.emptyMealPlaceholder:hover {
+    background-color: rgba(199, 190, 158, 0.1);
+    border-color: #8C8571;
+}
+
+/* Раскрытый список продуктов */
+.expandedFoodContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: rgba(244, 239, 227, 0.2);
+    border-radius: 14px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    margin-top: -4px;
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.foodItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px dashed rgba(140, 133, 113, 0.15);
+}
+
+.foodItem:last-child {
+    border-bottom: none;
+}
+
+.foodDetails {
+    display: flex;
+    flex-direction: column;
+}
+
+.foodName {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.foodMacros {
+    font-size: 11px;
+    color: var(--inf-soft);
+}
+
+.deleteFoodBtn {
+    background: none;
+    border: none;
+    color: var(--inf-soft);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.2s;
+}
+
+.deleteFoodBtn:hover {
+    color: var(--terracotta);
+}
+
+.inlineAddBtn {
+    align-self: center;
+    background: none;
+    border: none;
+    color: var(--green-dark);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-top: 4px;
+}
+
+/* Стили модалки */
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.formGroup label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.formGroup input {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px;
+    font-family: var(--font-main);
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.formGroup input:focus {
+    border-color: var(--green);
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.submitBtn {
+    background-color: var(--green-dark);
+    color: var(--surface);
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cancelBtn {
+    background-color: var(--surface-muted);
+    color: var(--ink);
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
