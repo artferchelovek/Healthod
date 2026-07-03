@@ -11,6 +11,7 @@ import Account from "@/assets/icons/account.svg?react";
 
 function Header() {
   const location = useLocation();
+  const navigate = useNavigate();
   const isChatTab = location.pathname === "/chat";
 
   return (
@@ -25,7 +26,9 @@ function Header() {
         </button>
       ) : (
         <div className={styles.layoutButtons}>
-          <Search fill="var(--ink)" />
+          <button className={styles.iconBtn} onClick={() => navigate("/search")} aria-label="Поиск">
+            <Search fill="var(--ink)" />
+          </button>
           <Notification fill="var(--ink)" />
         </div>
       )}
