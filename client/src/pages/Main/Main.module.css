@@ -126,7 +126,6 @@
 }
 
 .posts {
-    margin-top: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px
@@ -215,3 +214,159 @@
 .removeImageBtn:hover {
     background: var(--terracotta);
 }
+
+/* Стили загрузки и пустых состояний */
+.loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    color: var(--inf-soft);
+    font-size: var(--fs-body);
+    gap: 12px;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--green-soft);
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+    text-align: center;
+    background: var(--surface);
+    border-radius: 20px;
+    box-shadow: 0 1px 3px rgba(33, 29, 21, 0.04), 
+                0 12px 32px rgba(33, 29, 21, 0.03);
+    border: 1px solid var(--line);
+    gap: 16px;
+    margin-top: 15px;
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.illustration {
+    margin-bottom: 8px;
+    overflow: visible;
+}
+
+.illSun {
+    transform-origin: 60px 50px;
+    animation: scaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+
+.illLeafLeft {
+    transform-origin: 60px 76px;
+    animation: rotateIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+.illSprout {
+    transform-origin: 60px 68px;
+    animation: scaleIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+}
+
+.illGround {
+    transform-origin: 60px 75px;
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes rotateIn {
+    from {
+        opacity: 0;
+        transform: rotate(-15deg) scale(0.8);
+    }
+    to {
+        opacity: 0.8;
+        transform: rotate(0) scale(1);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.emptyStateTitle {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--ink);
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.emptyStateText {
+    font-size: var(--fs-body);
+    color: var(--inf-soft);
+    max-width: 290px;
+    line-height: 1.5;
+    margin: 0 0 4px;
+}
+
+.emptyStateBtn {
+    background-color: var(--green-dark);
+    color: var(--surface);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-family: var(--font-main);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-title);
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(63, 93, 66, 0.15);
+    transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.1s ease,
+                box-shadow 0.2s ease;
+}
+
+.emptyStateBtn:hover {
+    background-color: var(--green);
+    transform: translateY(-1.5px);
+    box-shadow: 0 8px 20px rgba(63, 93, 66, 0.25);
+}
+
+.emptyStateBtn:active {
+    transform: translateY(0);
+}
+
+

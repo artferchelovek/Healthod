@@ -6,6 +6,7 @@ import { likePost, unlikePost } from "@/logic/post.ts";
 import HeartOutline from "@/assets/icons/heart_favourite.svg?react";
 import HeartFilled from "@/assets/icons/heart_favourite_filled.svg?react";
 import CommentIcon from "@/assets/icons/comment.svg?react";
+import { useNavigate } from "react-router-dom";
 
 function Top(props: { author: any; dateString: string }) {
   return (
@@ -42,6 +43,7 @@ function Content(props: {
 export default function PostCard({ post }: { post: PostWithAuthor }) {
   const [isLiked, setIsLiked] = useState<boolean>(post.isLiked);
   const [likesCount, setLikesCount] = useState<number>(post.likesCount);
+  const navigate = useNavigate();
 
   const handleLike = async () => {
     const willLike = !isLiked;
@@ -70,7 +72,7 @@ export default function PostCard({ post }: { post: PostWithAuthor }) {
       <Content
         title={post.title}
         content={post.content}
-        imageUrl={post.imageUrl}
+        imageUrl={`${import.meta.env.VITE_API_URL}${post.imageUrl}`}
       />
 
       <div className={styles.footer}>
@@ -87,7 +89,12 @@ export default function PostCard({ post }: { post: PostWithAuthor }) {
           <p>{likesCount}</p>
         </div>
 
-        <div className={styles.comment}>
+        <div
+          className={styles.comment}
+          onClick={() => {
+            navigate(`/${post.id}`);
+          }}
+        >
           <CommentIcon fill="var(--inf-soft)" width={20} height={20} />
           <p>{post.commentsCount}</p>
         </div>
