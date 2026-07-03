@@ -1,0 +1,113 @@
+.authContainer {
+    margin: 0 auto;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--green-dark);
+    padding: 16px;
+    border-radius: 16px;
+}
+
+.appName {
+    font-size: var(--fs-display);
+    font-weight: var(--fw-display);
+}
+
+.appDescription {
+    font-size: var(--fs-body);
+    color: var(--inf-soft);
+}
+
+.loginPicker {
+    position: relative;
+    display: flex;
+    width: 320px;
+    
+    color: var(--inf-soft);
+    font-weight: var(--fw-display);
+    background: var(--surface-muted);
+    border-radius: 12px;
+    padding: 4px;
+    user-select: none;
+
+    p {
+        position: relative;
+        z-index: 2;
+        flex: 1;
+        text-align: center;
+        padding: 12px 0;
+        cursor: pointer;
+        transition: color 0.3s ease;
+
+        &.active {
+            color: var(--ink);
+        }
+    }
+}
+
+.slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    bottom: 4px;
+    width: calc(50% - 4px);
+    background: var(--surface);
+    border-radius: 8px;
+    z-index: 1;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .forgotPassword {
+        align-self: end;
+        color: var(--green-dark);
+        font-weight: var(--fw-display);
+    }
+}
+
+.buttonLogin {
+    border-radius: 15px;
+    border: none;
+    background: var(--green-dark);
+    color: var(--surface);
+    cursor: pointer;
+
+    padding: 16px;
+    font-weight: var(--fw-display);
+    font-size: var(--fs-body);
+}
+
+.formInput {
+    background: var(--surface);
+    display: flex;
+    padding: 16px;
+    border-radius: 16px;
+    gap: 10px;
+
+    input {
+        flex: 1;
+        font-family: var(--font-main);
+        border: none;
+        outline: none;
+    }
+}
