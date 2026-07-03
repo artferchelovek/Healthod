@@ -24,7 +24,7 @@ const router = Router();
  *       200:
  *         description: List of posts
  */
-router.get("/", getPosts);
+router.get("/", authMiddleware, getPosts);
 
 /**
  * @swagger
