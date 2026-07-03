@@ -9,13 +9,15 @@ struct LikeResponse: Decodable {
 struct LikeButtonView: View {
     let postId: String
     let commentsCount: Int
-    
+    let onCommentsTap: () -> Void
+
     @State private var isLiked: Bool = false
     @State private var likesCount: Int
 
-    init(postId: String, initialLikesCount: Int, commentsCount: Int, isLiked: Bool = false) {
+    init(postId: String, initialLikesCount: Int, commentsCount: Int, isLiked: Bool = false, onCommentsTap: @escaping () -> Void = {}) {
         self.postId = postId
         self.commentsCount = commentsCount
+        self.onCommentsTap = onCommentsTap
         _likesCount = State(initialValue: initialLikesCount)
         _isLiked = State(initialValue: isLiked)
     }
@@ -26,7 +28,7 @@ struct LikeButtonView: View {
                 HStack(spacing: 4) {
                     Image(systemName: isLiked ? "heart.fill" : "heart")
                         .font(.system(size: 22))
-                    
+
                     Text("\(likesCount)")
                         .font(.subheadline)
                         .fontWeight(.medium)
@@ -35,10 +37,8 @@ struct LikeButtonView: View {
             }
             .buttonStyle(.plain)
             .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isLiked)
-            
-            Button(action: {
-                print("Переход к комментариям для поста \(postId)")
-            }) {
+
+            Button(action: onCommentsTap) {
                 HStack(spacing: 8) {
                     Image(systemName: "bubble.right")
                         .font(.system(size: 20))

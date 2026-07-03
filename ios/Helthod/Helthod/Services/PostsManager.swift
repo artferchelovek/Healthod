@@ -87,46 +87,92 @@ struct CreatePostRequest: Codable {
     let imageUrl: String?
 }
 
-    @MainActor
-    class PostManager: ObservableObject {
-        static let shared = PostManager()
-        
-        @Published var posts: [Post] = []
-        @Published var isLoading = false
-        
-        private let networkManager = NetworkManager.shared
-        
-        private init() {
-        }
-        
-        func fetchPosts() async {
-            isLoading = true
-            
-            do {
-                
-                let fetchedPosts: [Post] = try await networkManager.fetch(endpoint: "/posts")
-                self.posts = fetchedPosts
-                print("Успешно загружено постов: \(fetchedPosts.count)")
-            } catch {
-                    print("Ошибка парсинга или загрузки постов: \(error)")
-            }
-            
-            isLoading = false
-        }
-        
-        func createPost(title: String, content: String, imageUrl: String? = nil) async -> Bool {
-            let body = CreatePostRequest(title: title, content: content, type: "TEXT", imageUrl: imageUrl)
-            
-            do {
-                try await networkManager.sendPost(endpoint: "/posts", body: body)
-                await fetchPosts()
-                return true
-            } catch {
-                print(error)
-                return false
-            }
+struct Comment: Identifiable, Codable {
+    let id: String
+    let content: String
+    let author: Author
+    let createdAt: String
+
+    var relativeDate: String {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        guard let date = formatter.date(from: createdAt) else { return createdAt }
+        let interval = Date().timeIntervalSince(date)
+        switch interval {
+        case 0..<60: return "только что"
+        case 60..<3600:
+            let m = Int(interval / 60)
+            let w = m == 1 ? "минуту" : m < 5 ? "минуты" : "минут"
+            return "\(m) \(w) назад"
+        case 3600..<86400:
+            let h = Int(interval / 3600)
+            let w = h == 1 ? "час" : h < 5 ? "часа" : "часов"
+            return "\(h) \(w) назад"
+        case 86400..<172800: return "вчера"
+        default:
+            let d = Int(interval / 86400)
+            return "\(d) дней назад"
         }
     }
-    
-  
+}
+
+struct CreateCommentRequest: Codable {
+    let content: String
+}
+
+@MainActor
+class PostManager: ObservableObject {
+    static let shared = PostManager()
+
+    @Published var posts: [Post] = []
+    @Published var isLoading = false
+
+    private let networkManager = NetworkManager.shared
+
+    private init() {}
+
+    func fetchPosts() async {
+        isLoading = true
+        do {
+            let fetchedPosts: [Post] = try await networkManager.fetch(endpoint: "/posts")
+            self.posts = fetchedPosts
+            print("Успешно загружено постов: \(fetchedPosts.count)")
+        } catch {
+            print("Ошибка парсинга или загрузки постов: \(error)")
+        }
+        isLoading = false
+    }
+
+    func createPost(title: String, content: String, imageUrl: String? = nil) async -> Bool {
+        let body = CreatePostRequest(title: title, content: content, type: "TEXT", imageUrl: imageUrl)
+        do {
+            try await networkManager.sendPost(endpoint: "/posts", body: body)
+            await fetchPosts()
+            return true
+        } catch {
+            print(error)
+            return false
+        }
+    }
+
+    func fetchComments(postId: String) async -> [Comment] {
+        do {
+            return try await networkManager.fetch(endpoint: "/posts/\(postId)/comments")
+        } catch {
+            print("❌ Ошибка загрузки комментариев: \(error)")
+            return []
+        }
+    }
+
+    func addComment(postId: String, content: String) async -> Bool {
+        let body = CreateCommentRequest(content: content)
+        do {
+            try await networkManager.sendPost(endpoint: "/posts/\(postId)/comments", body: body)
+            return true
+        } catch {
+            print("❌ Ошибка добавления комментария: \(error)")
+            return false
+        }
+    }
+}
 
