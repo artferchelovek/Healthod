@@ -1,16 +1,14 @@
-//
-//  ContentView.swift
-//  Helthod
-//
-//  Created by Сергей Лихачев on 03.07.2026.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject private var authManager = AuthManager.shared
+    @ObservedObject private var postsManager = PostManager.shared
     var body: some View {
-        AuthView()
+        if authManager.isAuthenticated {
+            
+            MainTabView()
+        } else {
+            AuthView()
+        }
     }
 }
-
-

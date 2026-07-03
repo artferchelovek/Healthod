@@ -7,9 +7,9 @@ enum AuthMode {
 }
 
 enum FitnessGoal: String, CaseIterable, Encodable {
-    case loseWeight = "lose_weight"
-    case gainMuscle = "gain_muscle"
-    case maintain   = "maintain"
+    case loseWeight = "LOSE_WEIGHT"
+    case gainMuscle = "GAIN_MUSCLE"
+    case maintain   = "MAINTAIN"
     
     var title: String {
         switch self {
@@ -150,10 +150,12 @@ struct AuthView: View {
                                     .foregroundColor(.gray)
                                 TextField("Рост (см)", text: $heightString).keyboardType(.numberPad)
                             }.padding()
+                            Divider().padding(.horizontal)
                         }
                         GoalSelectorView(selectedGoal: $selectedGoal)
-                                .padding(.top, 9)
+                                .padding( 9)
                                 .transition(.opacity.combined(with: .move(edge: .top)))
+                    
                     }
                    
                 }
