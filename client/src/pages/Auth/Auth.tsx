@@ -1,8 +1,10 @@
 import styles from "./Auth.module.css";
 import Logo from "@/assets/icons/heart_favourite_filled.svg?react";
-import Email from "@/assets/icons/mail.svg?react";
-import Password from "@/assets/icons/password.svg?react";
 import { useState } from "react";
+import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
+import { api } from "@/logic/api";
+import { useNavigate } from "react-router-dom";
 
 function Top() {
   return (
@@ -33,68 +35,60 @@ function LoginPicker(props: { login: boolean; onClick: () => void }) {
   );
 }
 
-function FormInput(props: {
-  value: string;
-  placeholder: string;
-  onChange: (value: string) => void;
-  icon: React.JSX.Element;
-}) {
-  return (
-    <div className={styles.formInput}>
-      {props.icon}
-      <input
-        placeholder={props.placeholder}
-        type="text"
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-      />
-    </div>
-  );
-}
-
-function Login() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-
-  const auth = (email: string, password: string) => {
-    console.log(email, password);
-  };
-
-  return (
-    <div className={styles.login}>
-      <FormInput
-        value={email}
-        onChange={setEmail}
-        icon={<Email fill={"var(--inf-soft)"} />}
-        placeholder={"Email"}
-      />
-
-      <FormInput
-        value={password}
-        onChange={setPassword}
-        icon={<Password fill={"var(--inf-soft)"} />}
-        placeholder={"Password"}
-      />
-
-      <p className={styles.forgotPassword}>Забыли пароль?</p>
-      <button
-        className={styles.buttonLogin}
-        onClick={() => auth(email, password)}
-      >
-        Войти
-      </button>
-    </div>
-  );
-}
-
 export default function Auth() {
   const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const handleLoginSubmit = async (data: any) => {
+    try {
+      setError(null);
+      const response = await api.post("/auth/login", data);
+      localStorage.setItem("token", response.data.token);
+      navigate("/");
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.error || "Произошла ошибка при входе");
+    }
+  };
+
+  const handleRegisterSubmit = async (data: any) => {
+    try {
+      setError(null);
+      // Сначала регистрируем
+      await api.post("/auth/register", data);
+
+      // Сразу выполняем вход после регистрации, чтобы пользователю не пришлось логиниться вручную
+      const loginResponse = await api.post("/auth/login", {
+        email: data.email,
+        password: data.password,
+      });
+
+      localStorage.setItem("token", loginResponse.data.token);
+      navigate("/");
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.error || "Произошла ошибка при регистрации");
+    }
+  };
+
+  const handleTabChange = () => {
+    setError(null); // Очищаем ошибку при переключении вкладок
+    setIsLogin(!isLogin);
+  };
 
   return (
     <div className={styles.authContainer}>
       <Top />
-      <LoginPicker login={isLogin} onClick={() => setIsLogin(!isLogin)} />
-      <Login />
+      <LoginPicker login={isLogin} onClick={handleTabChange} />
+
+      {error && <div className={styles.error}>{error}</div>}
+
+      {isLogin ? (
+        <LoginForm onSubmit={handleLoginSubmit} />
+      ) : (
+        <RegisterForm onSubmit={handleRegisterSubmit} />
+      )}
     </div>
   );
 }

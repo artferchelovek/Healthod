@@ -1,17 +1,19 @@
 .authContainer {
-    margin: 0 auto;
-    width: 90%;
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: 15px;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 24px;
 }
 
 .top {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    text-align: center;
 }
 
 .logo {
@@ -20,24 +22,27 @@
     justify-content: center;
     background: var(--green-dark);
     padding: 16px;
-    border-radius: 16px;
+    border-radius: 18px;
+    color: var(--surface);
+    box-shadow: 0 8px 16px rgba(63, 93, 66, 0.15);
 }
 
 .appName {
     font-size: var(--fs-display);
     font-weight: var(--fw-display);
+    color: var(--ink);
 }
 
 .appDescription {
     font-size: var(--fs-body);
     color: var(--inf-soft);
+    max-width: 280px;
 }
 
 .loginPicker {
     position: relative;
     display: flex;
     width: 320px;
-    
     color: var(--inf-soft);
     font-weight: var(--fw-display);
     background: var(--surface-muted);
@@ -70,44 +75,189 @@
     border-radius: 8px;
     z-index: 1;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(33, 29, 21, 0.08);
 }
 
-.login {
-    width: 320px;
+/* Формы */
+.form {
+    width: 100%;
+    max-width: 320px;
+}
+
+.formFields {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 16px;
+    width: 100%;
+}
 
-    .forgotPassword {
-        align-self: end;
-        color: var(--green-dark);
-        font-weight: var(--fw-display);
+.inputRow {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+
+    & > div {
+        flex: 1;
     }
 }
 
-.buttonLogin {
-    border-radius: 15px;
-    border: none;
-    background: var(--green-dark);
-    color: var(--surface);
-    cursor: pointer;
-
-    padding: 16px;
-    font-weight: var(--fw-display);
-    font-size: var(--fs-body);
+/* Стилизация полей ввода */
+.inputWrapper {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 16px;
+    gap: 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.formInput {
-    background: var(--surface);
-    display: flex;
-    padding: 16px;
-    border-radius: 16px;
-    gap: 10px;
+.inputWrapper:focus-within {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px var(--green-soft);
+}
 
-    input {
-        flex: 1;
-        font-family: var(--font-main);
-        border: none;
-        outline: none;
+.inputIcon {
+    display: flex;
+    align-items: center;
+    color: var(--inf-soft);
+    flex-shrink: 0;
+}
+
+.inputField {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-family: var(--font-main);
+    font-size: var(--fs-body);
+    color: var(--ink);
+}
+
+.inputField::placeholder {
+    color: var(--inf-soft);
+    opacity: 0.6;
+}
+
+/* Убираем стрелочки у числовых инпутов */
+.inputField[type="number"]::-webkit-outer-spin-button,
+.inputField[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.inputField[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Секция выбора целей */
+.goalSection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.goalTitle {
+    font-size: var(--fs-label);
+    font-weight: var(--fw-label);
+    color: var(--inf-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.goalGroup {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.goalBtn {
+    flex: 1;
+    background: var(--surface-muted);
+    border: 1px solid transparent;
+    color: var(--inf-soft);
+    font-family: var(--font-main);
+    font-size: var(--fs-label);
+    font-weight: var(--fw-label);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 10px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.goalBtn:hover {
+    background: var(--line);
+    color: var(--ink);
+}
+
+.activeGoal {
+    background: var(--green) !important;
+    color: var(--surface) !important;
+    box-shadow: 0 4px 10px rgba(88, 124, 92, 0.2);
+}
+
+/* Кнопка отправки */
+.submitBtn {
+    background: var(--green);
+    color: var(--surface);
+    border: none;
+    border-radius: 12px;
+    padding: 14px 0;
+    font-family: var(--font-main);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-title);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(88, 124, 92, 0.15);
+}
+
+.submitBtn:hover {
+    background: var(--green-dark);
+    box-shadow: 0 6px 16px rgba(63, 93, 66, 0.25);
+}
+
+.submitBtn:active {
+    transform: scale(0.98);
+}
+
+.forgotPassword {
+    font-size: var(--fs-label);
+    color: var(--inf-soft);
+    text-align: center;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    margin-top: 4px;
+}
+
+.forgotPassword:hover {
+    color: var(--terracotta);
+}
+
+.error {
+    background: var(--terracotta-soft);
+    color: var(--terracotta);
+    border: 1px solid var(--terracotta);
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: var(--fs-body);
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+    box-sizing: border-box;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
