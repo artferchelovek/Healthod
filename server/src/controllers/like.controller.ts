@@ -16,7 +16,7 @@ export const likePost = async (req: Request, res: Response) => {
 
     if (!post) {
       return res.status(404).json({
-        error: "Post not found",
+        error: "PostCard not found",
       });
     }
 
@@ -55,7 +55,7 @@ export const likePost = async (req: Request, res: Response) => {
     });
 
     return res.json({
-      message: "Post liked",
+      message: "PostCard liked",
       likesCount: updatedPost.likesCount,
       isLiked: true,
     });
@@ -114,7 +114,7 @@ export const unlikePost = async (req: Request, res: Response) => {
     });
 
     return res.json({
-      message: "Post unliked",
+      message: "PostCard unliked",
       likesCount: updatedPost.likesCount,
       isLiked: false,
     });

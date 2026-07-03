@@ -47,5 +47,15 @@ services:
       db-sync:
         condition: service_completed_successfully
 
+  frontend:
+    build:
+      context: ./client
+    container_name: health-frontend
+    restart: always
+    ports:
+      - "8000:80"
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:

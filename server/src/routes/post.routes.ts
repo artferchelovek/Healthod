@@ -40,9 +40,9 @@ router.get("/", authMiddleware, getPosts);
  *           type: string
  *     responses:
  *       200:
- *         description: Post found
+ *         description: PostCard found
  *       404:
- *         description: Post not found
+ *         description: PostCard not found
  */
 router.get("/:id", authMiddleware, getPostById);
 
@@ -76,7 +76,7 @@ router.get("/:id", authMiddleware, getPostById);
  *                 type: string
  *     responses:
  *       201:
- *         description: Post created
+ *         description: PostCard created
  *       401:
  *         description: Unauthorized
  */
@@ -98,11 +98,11 @@ router.post("/", authMiddleware, createPost);
  *           type: string
  *     responses:
  *       200:
- *         description: Post deleted
+ *         description: PostCard deleted
  *       403:
  *         description: Forbidden
  *       404:
- *         description: Post not found
+ *         description: PostCard not found
  */
 router.delete("/:id", authMiddleware, deletePost);
 
@@ -153,7 +153,7 @@ router.get("/:id/comments", authMiddleware, getCommentsByPost);
  *       401:
  *         description: Unauthorized
  *       404:
- *         description: Post not found
+ *         description: PostCard not found
  */
 router.post("/:id/comments", authMiddleware, createComment);
 
@@ -173,11 +173,11 @@ router.post("/:id/comments", authMiddleware, createComment);
  *           type: string
  *     responses:
  *       200:
- *         description: Post liked
+ *         description: PostCard liked
  *       401:
  *         description: Unauthorized
  *       404:
- *         description: Post not found
+ *         description: PostCard not found
  */
 router.post("/:id/like", authMiddleware, likePost);
 
@@ -197,7 +197,7 @@ router.post("/:id/like", authMiddleware, likePost);
  *           type: string
  *     responses:
  *       200:
- *         description: Post unliked
+ *         description: PostCard unliked
  *       401:
  *         description: Unauthorized
  *       404:

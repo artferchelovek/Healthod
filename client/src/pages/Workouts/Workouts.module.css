@@ -1,0 +1,344 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 14px;
+}
+
+.title {
+    font-size: var(--fs-h1);
+    font-weight: var(--fw-display);
+    color: var(--ink);
+    margin: 0;
+}
+
+.headerBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+    transition: opacity 0.2s ease;
+}
+
+.headerBtn:hover {
+    opacity: 0.7;
+}
+
+.loader {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--ink-soft);
+    font-size: var(--fs-body);
+}
+
+/* Карточка недельного отчета */
+.summaryCard {
+    background: var(--green);
+    border-radius: 18px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--surface);
+    box-shadow: 0 8px 24px rgba(63, 93, 70, 0.15);
+    margin-bottom: 20px;
+}
+
+.summaryTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summaryLabel {
+    font-size: var(--fs-body);
+    font-weight: 500;
+    opacity: 0.85;
+}
+
+.summaryValue {
+    font-size: var(--fs-body);
+    font-weight: var(--fw-title);
+}
+
+/* График */
+.chartContainer {
+    display: flex;
+    align-items: flex-end;
+    gap: 7px;
+    height: 70px;
+    padding-top: 6px;
+}
+
+.chartCol {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.chartBarWrapper {
+    height: 54px;
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    justify-content: center;
+}
+
+.chartBar {
+    width: 13px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.3);
+    transition: height 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+}
+
+.chartBarActive {
+    background: var(--surface);
+}
+
+.chartLabel {
+    font-size: 10px;
+    opacity: 0.75;
+    font-weight: 500;
+}
+
+.chartLabelActive {
+    opacity: 1;
+    font-weight: var(--fw-title);
+}
+
+/* Заголовки секций */
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0 8px;
+}
+
+.sectionTitle {
+    font-size: var(--fs-label);
+    font-weight: var(--fw-label);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+}
+
+.sectionCalories {
+    font-size: var(--fs-body);
+    font-weight: var(--fw-title);
+    color: var(--green);
+}
+
+/* Списки упражнений */
+.exercisesList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.exerciseCard {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 13px 14px;
+    box-shadow: 0 1px 2px rgba(40, 32, 15, 0.06);
+}
+
+.iconWrapper {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--green-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.exInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.exName {
+    font-size: var(--fs-body);
+    font-weight: var(--fw-title);
+    color: var(--ink);
+}
+
+.exSets {
+    font-size: 12px;
+    color: var(--ink-soft);
+}
+
+.exCalories {
+    font-size: var(--fs-body);
+    font-weight: var(--fw-title);
+    color: var(--green);
+}
+
+.addExerciseDottedBtn {
+    padding: 13px;
+    border-radius: 14px;
+    border: 1.5px dashed var(--line);
+    color: var(--ink-soft);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-title);
+    text-align: center;
+    background: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    margin-top: 4px;
+}
+
+.addExerciseDottedBtn:hover {
+    border-color: var(--green);
+    background-color: var(--surface-muted);
+    color: var(--green);
+}
+
+/* FAB */
+.fab {
+    position: fixed;
+    bottom: 95px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 28px;
+    background-color: var(--green);
+    color: var(--surface);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(88, 124, 92, 0.35), 
+                0 8px 24px rgba(88, 124, 92, 0.15);
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    z-index: 990;
+}
+
+.fab:hover {
+    background-color: var(--green-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(63, 93, 66, 0.4);
+}
+
+.fab:active {
+    transform: translateY(0) scale(0.95);
+}
+
+/* Форма добавления упражнения */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.formRow {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.formRow .fieldGroup {
+    flex: 1;
+}
+
+.fieldGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.fieldGroup label {
+    font-size: var(--fs-label);
+    font-weight: var(--fw-label);
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.textInput {
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--surface-muted);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-family: var(--font-main);
+    font-size: var(--fs-body);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.textInput:focus {
+    border-color: var(--green);
+    background-color: var(--surface);
+}
+
+.submitBtn {
+    background-color: var(--green);
+    color: var(--surface);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 0;
+    font-family: var(--font-main);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-title);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 12px rgba(88, 124, 92, 0.15);
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.submitBtn:hover:not(:disabled) {
+    background-color: var(--green-dark);
+}
+
+.submitBtn:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.submitBtn:disabled {
+    background-color: var(--ink-soft);
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.error {
+    background-color: var(--terracotta-soft);
+    color: var(--terracotta);
+    border: 1px solid var(--terracotta);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: var(--fs-body);
+    text-align: center;
+}
