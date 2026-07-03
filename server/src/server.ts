@@ -27,7 +27,9 @@ app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 
 app.get("/api", (_, res) => {
-  res.send("API running");
+  res.json({
+    health: "ok",
+  });
 });
 
 async function startServer() {
