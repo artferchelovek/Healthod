@@ -185,7 +185,7 @@ export default function Post() {
                         {comment.author?.username || "Пользователь"}
                       </span>
                       <span className={styles.commentDate}>
-                        {formatRelativeTime(comment.createdAt)}
+                        {formatRelativeTime(new Date(comment.createdAt))}
                       </span>
                     </div>
                     <p className={styles.commentText}>{comment.content}</p>
