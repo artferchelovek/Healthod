@@ -72,7 +72,7 @@ export default function PostCard({ post }: { post: PostWithAuthor }) {
       <Content
         title={post.title}
         content={post.content}
-        imageUrl={`${import.meta.env.VITE_API_URL}${post.imageUrl}`}
+        imageUrl={post.imageUrl ? `${import.meta.env.VITE_API_URL}${post.imageUrl}` : null}
       />
 
       <div className={styles.footer}>
@@ -94,6 +94,7 @@ export default function PostCard({ post }: { post: PostWithAuthor }) {
           onClick={() => {
             navigate(`/${post.id}`);
           }}
+          style={{ cursor: "pointer" }}
         >
           <CommentIcon fill="var(--inf-soft)" width={20} height={20} />
           <p>{post.commentsCount}</p>

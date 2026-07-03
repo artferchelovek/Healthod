@@ -128,7 +128,7 @@
 .posts {
     display: flex;
     flex-direction: column;
-    gap: 10px
+    gap: 10px;
 }
 
 /* Стили для выбора картинок в форме создания поста */
@@ -368,5 +368,3 @@
 .emptyStateBtn:active {
     transform: translateY(0);
 }
-
-
