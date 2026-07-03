@@ -48,7 +48,7 @@ extension Post {
         guard let path = imageUrl, !path.isEmpty else { return nil }
         if path.hasPrefix("http") { return URL(string: path) }
         let clean = path.hasPrefix("/") ? String(path.dropFirst()) : path
-        return URL(string: "https://temp.lilv2dim.ru/\(clean)")
+        return URL(string: "https://api.health.lilv2dim.ru/\(clean)")
     }
     
     var relativeDate: String {
@@ -106,9 +106,9 @@ struct CreatePostRequest: Codable {
                 
                 let fetchedPosts: [Post] = try await networkManager.fetch(endpoint: "/posts")
                 self.posts = fetchedPosts
-                print("📱 Успешно загружено постов: \(fetchedPosts.count)")
+                print("Успешно загружено постов: \(fetchedPosts.count)")
             } catch {
-                    print("❌ Ошибка парсинга или загрузки постов: \(error)")
+                    print("Ошибка парсинга или загрузки постов: \(error)")
             }
             
             isLoading = false

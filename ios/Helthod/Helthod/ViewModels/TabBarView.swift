@@ -40,7 +40,7 @@ struct MainTabView: View {
             }
             
             Tab("Тренировки", systemImage: "figure.highintensity.intervaltraining", value: .train) {
-                
+                TrainView()
             }
             Tab("Сообщения", systemImage: "message.fill", value: .message) {
                 

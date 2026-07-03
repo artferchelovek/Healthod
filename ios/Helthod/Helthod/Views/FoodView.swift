@@ -6,6 +6,10 @@ struct FoodView: View {
     @State private var editingMeal: FoodItem?
     @State private var showDeleteAlert = false
     @State private var mealToDelete: FoodItem?
+    @State private var showAI = false
+    @State private var aiLoading = false
+    @State private var aiRecommendation: AIRecommendation?
+    @State private var aiError: String?
 
     var body: some View {
         NavigationStack {
@@ -101,13 +105,33 @@ struct FoodView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showAddSheet = true }) {
-                        Image(systemName: "plus")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
-                            .frame(width: 34, height: 34)
-                            .background(.ultraThinMaterial)
-                            .clipShape(Circle())
+                    HStack(spacing: 8) {
+                        Button(action: requestAI) {
+                            if aiLoading {
+                                ProgressView()
+                                    .tint(Color(red: 0.31, green: 0.40, blue: 0.33))
+                                    .frame(width: 34, height: 34)
+                                    .background(.ultraThinMaterial)
+                                    .clipShape(Circle())
+                            } else {
+                                Image(systemName: "brain.head.profile")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
+                                    .frame(width: 34, height: 34)
+                                    .background(.ultraThinMaterial)
+                                    .clipShape(Circle())
+                            }
+                        }
+                        .disabled(aiLoading)
+
+                        Button(action: { showAddSheet = true }) {
+                            Image(systemName: "plus")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
+                                .frame(width: 34, height: 34)
+                                .background(.ultraThinMaterial)
+                                .clipShape(Circle())
+                        }
                     }
                 }
             }
@@ -116,6 +140,24 @@ struct FoodView: View {
             }
             .sheet(item: $editingMeal) { meal in
                 MealView(mode: .edit(meal: meal))
+            }
+            .sheet(isPresented: $showAI) {
+                if let recommendation = aiRecommendation {
+                    AIRecommendationView(recommendation: recommendation) {
+                        nutritionManager.targetCalories = Double(recommendation.calories)
+                        nutritionManager.targetProteins = Double(recommendation.protein)
+                        nutritionManager.targetFats = Double(recommendation.fats)
+                        nutritionManager.targetCarbs = Double(recommendation.carbs)
+                    }
+                }
+            }
+            .alert("Ошибка", isPresented: .init(
+                get: { aiError != nil },
+                set: { if !$0 { aiError = nil } }
+            )) {
+                Button("OK") { aiError = nil }
+            } message: {
+                Text(aiError ?? "")
             }
             .alert("Удалить приём пищи?", isPresented: $showDeleteAlert) {
                 Button("Удалить", role: .destructive) {
@@ -129,6 +171,33 @@ struct FoodView: View {
             }
             .task {
                 await nutritionManager.fetchMeals()
+            }
+        }
+    }
+
+    private func requestAI() {
+        aiLoading = true
+        aiError = nil
+        Task {
+            let network = NetworkManager.shared
+            do {
+                let profile: UserProfile = try await network.fetch(endpoint: "/auth/me")
+                let recommendation = await NutritionAIService.shared.getRecommendation(
+                    age: profile.age,
+                    weight: profile.weight,
+                    height: profile.height,
+                    goal: profile.goal
+                )
+                aiLoading = false
+                if let recommendation = recommendation {
+                    aiRecommendation = recommendation
+                    showAI = true
+                } else {
+                    aiError = "Не удалось получить рекомендацию. Попробуйте позже."
+                }
+            } catch {
+                aiLoading = false
+                aiError = "Ошибка загрузки профиля: \(error.localizedDescription)"
             }
         }
     }

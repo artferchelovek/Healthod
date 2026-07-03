@@ -5,7 +5,7 @@ static let shared = NetworkManager()
     
     private init() {}
     
-    private var baseURL: String = "https://temp.lilv2dim.ru/api"
+    private var baseURL: String = "https://api.health.lilv2dim.ru/api"
     
     enum NetworkError: Error, LocalizedError {
         case badURL
@@ -40,7 +40,7 @@ static let shared = NetworkManager()
         
         if httpResponse.statusCode == 401 {
             if let errorBody = String(data: data, encoding: .utf8) {
-                print("❌ 401 — неавторизован: \(errorBody)")
+                print("401 — неавторизован: \(errorBody)")
             }
             AuthManager.shared.logout()
             throw NetworkError.unauthorized
@@ -48,7 +48,7 @@ static let shared = NetworkManager()
         
         guard (200...299).contains(httpResponse.statusCode) else {
             let errorBody = String(data: data, encoding: .utf8) ?? ""
-            print("❌ Тело ответа с ошибкой: \(errorBody)")
+            print("Тело ответа с ошибкой: \(errorBody)")
 
             if let json = try? JSONSerialization.jsonObject(with: data) as? [String: String],
                let msg = json["error"] ?? json["message"] {
