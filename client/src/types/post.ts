@@ -1,27 +1,30 @@
-import type { Prisma } from "@prisma-types";
-
-export type PostWithAuthor = Prisma.PostGetPayload<{
-  include: {
-    author: {
-      select: {
-        id: true;
-        username: true;
-        avatarUrl: true;
-      };
-    };
+export interface PostWithAuthor {
+  id: string;
+  title: string | null;
+  content: string;
+  imageUrl: string | null;
+  authorId: string;
+  communityId: string | null;
+  likesCount: number;
+  commentsCount: number;
+  createdAt: string | Date;
+  author: {
+    id: string;
+    username: string;
+    avatarUrl: string | null;
   };
-}> & {
   isLiked: boolean;
-};
+}
 
-export type CommentWithAuthor = Prisma.CommentGetPayload<{
-  include: {
-    author: {
-      select: {
-        id: true;
-        username: true;
-        avatarUrl: true;
-      };
-    };
+export interface CommentWithAuthor {
+  id: string;
+  content: string;
+  postId: string;
+  authorId: string;
+  createdAt: string | Date;
+  author: {
+    id: string;
+    username: string;
+    avatarUrl: string | null;
   };
-}>;
+}
