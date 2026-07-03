@@ -38,8 +38,16 @@ export const createPost = async (req: Request, res: Response) => {
   }
 };
 
-export const getPosts = async (_: Request, res: Response) => {
+export const getPosts = async (req: Request, res: Response) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: "Unauthorized",
+      });
+    }
+
+    const userId = req.user.userId;
+
     const posts = await prisma.post.findMany({
       orderBy: {
         createdAt: "desc",
@@ -52,10 +60,24 @@ export const getPosts = async (_: Request, res: Response) => {
             avatarUrl: true,
           },
         },
+        likes: {
+          where: {
+            userId,
+          },
+          select: {
+            userId: true,
+          },
+        },
       },
     });
 
-    return res.json(posts);
+    const formattedPosts = posts.map(({ likes, ...post }) => ({
+      ...post,
+      isLiked: likes.length > 0,
+      isMine: post.authorId === userId,
+    }));
+
+    return res.json(formattedPosts);
   } catch (error) {
     console.error(error);
 
@@ -67,7 +89,14 @@ export const getPosts = async (_: Request, res: Response) => {
 
 export const getPostById = async (req: Request, res: Response) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: "Unauthorized",
+      });
+    }
+
     const id = req.params.id as string;
+    const userId = req.user.userId;
 
     const post = await prisma.post.findUnique({
       where: { id },
@@ -79,6 +108,14 @@ export const getPostById = async (req: Request, res: Response) => {
             avatarUrl: true,
           },
         },
+        likes: {
+          where: {
+            userId,
+          },
+          select: {
+            userId: true,
+          },
+        },
       },
     });
 
@@ -88,7 +125,13 @@ export const getPostById = async (req: Request, res: Response) => {
       });
     }
 
-    return res.json(post);
+    const { likes, ...postData } = post;
+
+    return res.json({
+      ...postData,
+      isLiked: likes.length > 0,
+      isMine: postData.authorId === userId,
+    });
   } catch (error) {
     console.error(error);
 
