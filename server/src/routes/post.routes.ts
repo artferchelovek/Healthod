@@ -44,7 +44,7 @@ router.get("/", authMiddleware, getPosts);
  *       404:
  *         description: Post not found
  */
-router.get("/:id", getPostById);
+router.get("/:id", authMiddleware, getPostById);
 
 /**
  * @swagger
@@ -122,7 +122,7 @@ router.delete("/:id", authMiddleware, deletePost);
  *       200:
  *         description: List of comments
  */
-router.get("/:id/comments", getCommentsByPost);
+router.get("/:id/comments", authMiddleware, getCommentsByPost);
 
 /**
  * @swagger
