@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
+import { checkAndUnlockAchievements } from "./achievement.controller";
 
 export const createPost = async (req: Request, res: Response) => {
   try {
@@ -27,6 +28,8 @@ export const createPost = async (req: Request, res: Response) => {
         authorId: req.user.userId,
       },
     });
+
+    checkAndUnlockAchievements(req.user.userId);
 
     return res.status(201).json(post);
   } catch (error) {
@@ -71,11 +74,11 @@ export const getPosts = async (req: Request, res: Response) => {
       },
     });
 
-    const formattedPosts = posts.map(({ likes, ...post }) => ({
-      ...post,
-      isLiked: likes.length > 0,
-      isMine: post.authorId === userId,
-    }));
+    const formattedPosts = posts.map((post: typeof posts[0]) => {
+      const isLiked = post.likes.length > 0;
+      const { likes, ...postData } = post;
+      return { ...postData, isLiked, isMine: post.authorId === userId };
+    });
 
     return res.json(formattedPosts);
   } catch (error) {

@@ -14,6 +14,7 @@ export const uploadImage = async (req: Request, res: Response) => {
 
     console.log("[uploadImage] file:", req.file);
 
+
     const imageUrl = `/uploads/${req.file.filename}`;
 
     console.log("[uploadImage] generated url:", imageUrl);

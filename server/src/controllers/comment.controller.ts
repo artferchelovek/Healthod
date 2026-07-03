@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
+import { checkAndUnlockAchievements } from "./achievement.controller";
 
 export const createComment = async (req: Request, res: Response) => {
   try {
@@ -44,6 +45,13 @@ export const createComment = async (req: Request, res: Response) => {
         },
       },
     });
+
+    await prisma.post.update({
+      where: { id: postId },
+      data: { commentsCount: { increment: 1 } },
+    });
+
+    checkAndUnlockAchievements(req.user.userId);
 
     return res.status(201).json(comment);
   } catch (error) {
@@ -115,6 +123,11 @@ export const deleteComment = async (req: Request, res: Response) => {
 
     await prisma.comment.delete({
       where: { id },
+    });
+
+    await prisma.post.update({
+      where: { id: comment.postId },
+      data: { commentsCount: { decrement: 1 } },
     });
 
     return res.json({
