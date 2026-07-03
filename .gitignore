@@ -1,0 +1,9 @@
+.idea
+
+.DS_STORE
+
+
+#front
+
+/client/node_modules
+/client/dist
