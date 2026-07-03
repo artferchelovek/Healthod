@@ -42,15 +42,21 @@ export const likePost = async (req: Request, res: Response) => {
       },
     });
 
-    const likesCount = await prisma.like.count({
-      where: {
-        postId,
+    const updatedPost = await prisma.post.update({
+      where: { id: postId },
+      data: {
+        likesCount: {
+          increment: 1,
+        },
+      },
+      select: {
+        likesCount: true,
       },
     });
 
     return res.json({
       message: "Post liked",
-      likesCount,
+      likesCount: updatedPost.likesCount,
       isLiked: true,
     });
   } catch (error) {
@@ -95,15 +101,21 @@ export const unlikePost = async (req: Request, res: Response) => {
       },
     });
 
-    const likesCount = await prisma.like.count({
-      where: {
-        postId,
+    const updatedPost = await prisma.post.update({
+      where: { id: postId },
+      data: {
+        likesCount: {
+          decrement: 1,
+        },
+      },
+      select: {
+        likesCount: true,
       },
     });
 
     return res.json({
       message: "Post unliked",
-      likesCount,
+      likesCount: updatedPost.likesCount,
       isLiked: false,
     });
   } catch (error) {
