@@ -7,3 +7,10 @@
 
 /client/node_modules
 /client/dist
+
+#back
+
+/server/node_modules
+/server/.env.docker
+/server/.env.local
+/server/.env
