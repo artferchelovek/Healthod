@@ -17,6 +17,7 @@ import moodRoutes from "./routes/mood.routes";
 import achievementRoutes from "./routes/achievement.routes";
 import profileRoutes from "./routes/profile.routes";
 import communityRoutes from "./routes/community.routes";
+import chatRoutes from "./routes/chat.routes";
 
 import healthRoutes from "./routes/health.routes";
 
@@ -54,6 +55,7 @@ app.use("/api/mood", moodRoutes);
 app.use("/api/achievements", achievementRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/communities", communityRoutes);
+app.use("/api/chats", chatRoutes);
 app.use("/api/health", healthRoutes);
 
 

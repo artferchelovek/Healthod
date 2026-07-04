@@ -31,7 +31,12 @@ struct Chat: Codable, Identifiable, Hashable {
 
     var displayName: String {
         if let name = name, !name.isEmpty { return name }
+        if type == "COMMUNITY" { return name ?? "Сообщество" }
         return participants?.first { $0.userId != AuthManager.shared.currentUserId }?.user.username ?? "Чат"
+    }
+
+    var isGroup: Bool {
+        type == "GROUP" || type == "COMMUNITY"
     }
 }
 
@@ -70,6 +75,11 @@ struct MessagesResponse: Codable {
 
 struct CreateMessageRequest: Codable {
     let content: String
+}
+
+struct CreateGroupRequest: Codable {
+    let name: String
+    let participantIds: [String]
 }
 
 @MainActor
@@ -126,6 +136,29 @@ class ChatManager: ObservableObject {
         } catch {
             print("Ошибка отправки сообщения: \(error)")
             return nil
+        }
+    }
+
+    func createGroupChat(name: String, participantIds: [String]) async -> Chat? {
+        do {
+            let body = CreateGroupRequest(name: name, participantIds: participantIds)
+            let chat: Chat = try await network.post(endpoint: "/chats/group", body: body)
+            if !chats.contains(where: { $0.id == chat.id }) {
+                chats.insert(chat, at: 0)
+            }
+            return chat
+        } catch {
+            print("Ошибка создания группы: \(error)")
+            return nil
+        }
+    }
+
+    func searchUsers(query: String) async -> [ChatUser] {
+        do {
+            return try await network.fetch(endpoint: "/chats/users/search?q=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? query)")
+        } catch {
+            print("Ошибка поиска пользователей: \(error)")
+            return []
         }
     }
 

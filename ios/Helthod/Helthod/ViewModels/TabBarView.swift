@@ -46,7 +46,7 @@ struct MainTabView: View {
                 NavigationStack {
                     ChatListView()
                         .navigationDestination(for: Chat.self) { chat in
-                            ChatDetailView(chatId: chat.id)
+                            ChatDetailView(chat: chat)
                         }
                 }
             }
