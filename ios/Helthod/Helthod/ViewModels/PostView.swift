@@ -87,42 +87,38 @@ struct PostView: View {
                 .font(.body)
 
             if !post.imageFullURLs.isEmpty {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(post.imageFullURLs, id: \.self) { url in
-                            switch fileType(for: url) {
-                            case .image:
-                                AsyncImage(url: url) { phase in
-                                    switch phase {
-                                    case .empty:
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
-                                            .frame(width: 240, height: 180)
-                                            .overlay(ProgressView())
-                                    case .success(let image):
-                                        image
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                            .frame(width: 240, height: 180)
-                                            .clipped()
-                                            .cornerRadius(12)
-                                    case .failure:
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
-                                            .frame(width: 240, height: 180)
-                                            .overlay(
-                                                Image(systemName: "photo")
-                                                    .foregroundColor(.gray)
-                                            )
-                                    @unknown default:
-                                        EmptyView()
-                                    }
+                VStack(spacing: 8) {
+                    ForEach(post.imageFullURLs, id: \.self) { url in
+                        switch fileType(for: url) {
+                        case .image:
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .empty:
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
+                                        .aspectRatio(16/9, contentMode: .fit)
+                                        .overlay(ProgressView())
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .cornerRadius(12)
+                                case .failure:
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
+                                        .aspectRatio(16/9, contentMode: .fit)
+                                        .overlay(
+                                            Image(systemName: "photo")
+                                                .foregroundColor(.gray)
+                                        )
+                                @unknown default:
+                                    EmptyView()
                                 }
-                            case .video:
-                                VideoThumbnailView(url: url, onPlay: { playVideo(url: $0) })
-                            case .document:
-                                FileAttachmentView(url: url)
                             }
+                        case .video:
+                            VideoThumbnailView(url: url, onPlay: { playVideo(url: $0) })
+                        case .document:
+                            FileAttachmentView(url: url)
                         }
                     }
                 }
@@ -171,17 +167,15 @@ private struct VideoThumbnailView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
-                .frame(width: 240, height: 180)
+                .aspectRatio(16/9, contentMode: .fit)
             if let image = thumbnail {
                 Image(uiImage: image)
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 240, height: 180)
-                    .clipped()
+                    .aspectRatio(contentMode: .fit)
                     .cornerRadius(12)
             }
             Image(systemName: "play.circle.fill")
-                .font(.system(size: 40))
+                .font(.system(size: 44))
                 .foregroundColor(.white)
                 .shadow(radius: 4)
         }
@@ -205,21 +199,23 @@ private struct FileAttachmentView: View {
     let url: URL
 
     var body: some View {
-        RoundedRectangle(cornerRadius: 12)
-            .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
-            .frame(width: 180, height: 120)
-            .overlay(
-                VStack(spacing: 6) {
-                    Image(systemName: fileIcon(for: url))
-                        .font(.system(size: 32))
-                        .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
-                    Text(fileName(from: url))
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                        .lineLimit(2)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 8)
-                }
-            )
+        HStack(spacing: 12) {
+            Image(systemName: fileIcon(for: url))
+                .font(.system(size: 28))
+                .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
+                .frame(width: 44, height: 44)
+                .background(Color(red: 0.94, green: 0.93, blue: 0.91))
+                .cornerRadius(10)
+            Text(fileName(from: url))
+                .font(.subheadline)
+                .foregroundColor(.primary)
+                .lineLimit(1)
+            Spacer()
+            Image(systemName: "arrow.down.circle")
+                .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
+        }
+        .padding(12)
+        .background(Color(red: 0.94, green: 0.93, blue: 0.91).opacity(0.5))
+        .cornerRadius(12)
     }
 }
