@@ -49,7 +49,8 @@ struct PostView: View {
     @State private var showComments = false
     @State private var showDeleteAlert = false
     @State private var isDeleting = false
-    @State private var videoToPlay: URL?
+    @State private var showVideoPlayer = false
+    @State private var videoURL: URL?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -120,7 +121,7 @@ struct PostView: View {
                                     }
                                 }
                             case .video:
-                                VideoThumbnailView(url: url, onPlay: { videoToPlay = $0 })
+                                VideoThumbnailView(url: url, onPlay: { videoURL = $0; showVideoPlayer = true })
                             case .document:
                                 FileAttachmentView(url: url)
                             }
@@ -138,8 +139,10 @@ struct PostView: View {
         .sheet(isPresented: $showComments) {
             CommentsView(postId: post.id)
         }
-        .fullScreenCover(item: $videoToPlay) { url in
-            VideoPlayerView(url: url)
+        .fullScreenCover(isPresented: $showVideoPlayer) {
+            if let url = videoURL {
+                VideoPlayerView(url: url)
+            }
         }
         .alert("Удалить пост?", isPresented: $showDeleteAlert) {
             Button("Удалить", role: .destructive) {
@@ -155,34 +158,28 @@ struct PostView: View {
     }
 }
 
-extension URL: Identifiable {
-    public var id: String { absoluteString }
-}
-
 private struct VideoThumbnailView: View {
     let url: URL
     let onPlay: (URL) -> Void
 
     var body: some View {
-        Button {
-            onPlay(url)
-        } label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
-                    .frame(width: 240, height: 180)
-                VStack(spacing: 8) {
-                    Image(systemName: "play.circle.fill")
-                        .font(.system(size: 40))
-                        .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
-                    Text(fileName(from: url))
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                        .lineLimit(1)
-                        .padding(.horizontal, 8)
-                }
+        ZStack {
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
+                .frame(width: 240, height: 180)
+            VStack(spacing: 8) {
+                Image(systemName: "play.circle.fill")
+                    .font(.system(size: 40))
+                    .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
+                Text(fileName(from: url))
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .lineLimit(1)
+                    .padding(.horizontal, 8)
             }
         }
+        .contentShape(Rectangle())
+        .onTapGesture { onPlay(url) }
     }
 }
 
