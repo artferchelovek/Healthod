@@ -13,7 +13,7 @@ export function connectSocket(): Socket {
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
   const baseUrl = API_URL.startsWith("/")
-    ? `${window.location.protocol}//api.${window.location.hostname}`
+    ? window.location.origin
     : new URL(API_URL).origin;
 
   const token = localStorage.getItem("token");
