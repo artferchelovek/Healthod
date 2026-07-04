@@ -1,4 +1,5 @@
 import SwiftUI
+import AVKit
 
 enum PostType: String, Codable {
     case text = "TEXT"
@@ -48,6 +49,7 @@ struct PostView: View {
     @State private var showComments = false
     @State private var showDeleteAlert = false
     @State private var isDeleting = false
+    @State private var videoToPlay: URL?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -118,7 +120,7 @@ struct PostView: View {
                                     }
                                 }
                             case .video:
-                                VideoThumbnailView(url: url)
+                                VideoThumbnailView(url: url, onPlay: { videoToPlay = $0 })
                             case .document:
                                 FileAttachmentView(url: url)
                             }
@@ -136,6 +138,9 @@ struct PostView: View {
         .sheet(isPresented: $showComments) {
             CommentsView(postId: post.id)
         }
+        .fullScreenCover(item: $videoToPlay) { url in
+            VideoPlayerView(url: url)
+        }
         .alert("Удалить пост?", isPresented: $showDeleteAlert) {
             Button("Удалить", role: .destructive) {
                 isDeleting = true
@@ -150,25 +155,63 @@ struct PostView: View {
     }
 }
 
+extension URL: Identifiable {
+    public var id: String { absoluteString }
+}
+
 private struct VideoThumbnailView: View {
     let url: URL
+    let onPlay: (URL) -> Void
 
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
-                .frame(width: 240, height: 180)
-            VStack(spacing: 8) {
-                Image(systemName: "play.circle.fill")
-                    .font(.system(size: 40))
-                    .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
-                Text(fileName(from: url))
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                    .lineLimit(1)
-                    .padding(.horizontal, 8)
+        Button {
+            onPlay(url)
+        } label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
+                    .frame(width: 240, height: 180)
+                VStack(spacing: 8) {
+                    Image(systemName: "play.circle.fill")
+                        .font(.system(size: 40))
+                        .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
+                    Text(fileName(from: url))
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .lineLimit(1)
+                        .padding(.horizontal, 8)
+                }
             }
         }
+    }
+}
+
+private struct VideoPlayerView: View {
+    let url: URL
+    @Environment(\.dismiss) private var dismiss
+    @State private var player: AVPlayer
+
+    init(url: URL) {
+        self.url = url
+        _player = State(initialValue: AVPlayer(url: url))
+    }
+
+    var body: some View {
+        VideoPlayer(player: player)
+            .ignoresSafeArea()
+            .onAppear { player.play() }
+            .overlay(alignment: .topTrailing) {
+                Button {
+                    player.pause()
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 30))
+                        .foregroundColor(.white)
+                        .shadow(radius: 4)
+                        .padding(16)
+                }
+            }
     }
 }
 
