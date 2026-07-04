@@ -1,0 +1,86 @@
+import SwiftUI
+
+struct ChatListView: View {
+    @StateObject private var manager = ChatManager.shared
+    @State private var isLoading = false
+
+    var body: some View {
+        Group {
+            if manager.chats.isEmpty && !manager.isLoading {
+                VStack(spacing: 12) {
+                    Image(systemName: "message")
+                        .font(.system(size: 40))
+                        .foregroundColor(Color(red: 0.55, green: 0.52, blue: 0.44))
+                    Text("Нет сообщений")
+                        .font(.headline)
+                        .foregroundColor(.gray)
+                    Text("Начните общение с другими пользователями")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                List {
+                    ForEach(manager.chats) { chat in
+                        NavigationLink(value: chat.id) {
+                            ChatRow(chat: chat)
+                        }
+                    }
+                }
+                .listStyle(.plain)
+                .refreshable {
+                    await manager.fetchChats()
+                }
+            }
+        }
+        .background(Color(red: 0.96, green: 0.95, blue: 0.93).ignoresSafeArea())
+        .navigationTitle("Сообщения")
+        .navigationBarTitleDisplayMode(.inline)
+        .task { await manager.fetchChats() }
+    }
+}
+
+struct ChatRow: View {
+    let chat: Chat
+
+    var body: some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(LinearGradient(colors: [
+                        Color(red: 0.85, green: 0.89, blue: 0.83),
+                        Color(red: 0.96, green: 0.87, blue: 0.81)
+                    ], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .frame(width: 48, height: 48)
+                Image(systemName: "person.fill")
+                    .font(.system(size: 18))
+                    .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(chat.displayName)
+                    .font(.system(size: 16, weight: .semibold))
+
+                if let last = chat.lastMessage {
+                    Text(last.content)
+                        .font(.system(size: 14))
+                        .foregroundColor(.gray)
+                        .lineLimit(1)
+                } else {
+                    Text("Нет сообщений")
+                        .font(.system(size: 14))
+                        .foregroundColor(.gray)
+                }
+            }
+
+            Spacer()
+
+            if let last = chat.lastMessage {
+                Text(last.relativeTime)
+                    .font(.system(size: 12))
+                    .foregroundColor(.gray)
+            }
+        }
+        .padding(.vertical, 4)
+    }
+}

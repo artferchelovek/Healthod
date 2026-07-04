@@ -7,6 +7,7 @@ struct UserProfileView: View {
     @State private var isLoading = true
     @State private var isFollowing = false
     @State private var isFollowLoading = false
+    @State private var chatToOpen: Chat?
     @Environment(\.dismiss) private var dismiss
 
     private let currentUserId = AuthManager.shared.currentUserId
@@ -44,26 +45,41 @@ struct UserProfileView: View {
                             }
 
                             if userId != currentUserId {
-                                Button(action: toggleFollow) {
-                                    HStack(spacing: 6) {
-                                        if isFollowLoading {
-                                            ProgressView()
-                                                .tint(.white)
-                                        } else {
-                                            Image(systemName: isFollowing ? "person.badge.minus" : "person.badge.plus")
-                                            Text(isFollowing ? "Отписаться" : "Подписаться")
+                                HStack(spacing: 10) {
+                                    Button(action: toggleFollow) {
+                                        HStack(spacing: 6) {
+                                            if isFollowLoading {
+                                                ProgressView()
+                                                    .tint(.white)
+                                            } else {
+                                                Image(systemName: isFollowing ? "person.badge.minus" : "person.badge.plus")
+                                                Text(isFollowing ? "Отписаться" : "Подписаться")
+                                            }
                                         }
+                                        .font(.system(size: 14, weight: .semibold))
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 24)
+                                        .padding(.vertical, 9)
+                                        .background(isFollowing
+                                            ? Color(red: 0.55, green: 0.52, blue: 0.44)
+                                            : Color(red: 0.31, green: 0.40, blue: 0.33))
+                                        .cornerRadius(10)
                                     }
-                                    .font(.system(size: 14, weight: .semibold))
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 24)
-                                    .padding(.vertical, 9)
-                                    .background(isFollowing
-                                        ? Color(red: 0.55, green: 0.52, blue: 0.44)
-                                        : Color(red: 0.31, green: 0.40, blue: 0.33))
-                                    .cornerRadius(10)
+                                    .disabled(isFollowLoading)
+
+                                    Button(action: openChat) {
+                                        HStack(spacing: 6) {
+                                            Image(systemName: "bubble.left.and.bubble.right")
+                                            Text("Написать")
+                                        }
+                                        .font(.system(size: 14, weight: .semibold))
+                                        .foregroundColor(Color(red: 0.13, green: 0.11, blue: 0.08))
+                                        .padding(.horizontal, 20)
+                                        .padding(.vertical, 9)
+                                        .background(Color(red: 0.89, green: 0.86, blue: 0.78))
+                                        .cornerRadius(10)
+                                    }
                                 }
-                                .disabled(isFollowLoading)
                             }
 
                             HStack(spacing: 34) {
@@ -100,6 +116,11 @@ struct UserProfileView: View {
                 .background(Color(red: 0.96, green: 0.95, blue: 0.93).ignoresSafeArea())
             }
         }
+        .sheet(item: $chatToOpen) { chat in
+            NavigationStack {
+                ChatDetailView(chatId: chat.id)
+            }
+        }
         .task { await load() }
     }
 
@@ -111,6 +132,14 @@ struct UserProfileView: View {
             isFollowing = result.isFollowing
         }
         isLoading = false
+    }
+
+    private func openChat() {
+        Task {
+            if let chat = await ChatManager.shared.createChat(participantId: userId) {
+                chatToOpen = chat
+            }
+        }
     }
 
     private func toggleFollow() {
