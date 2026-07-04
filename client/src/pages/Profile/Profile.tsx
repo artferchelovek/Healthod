@@ -64,7 +64,7 @@ export default function Profile() {
       }
 
       const allWorkouts = await api.get("/workouts").catch(() => ({ data: [] }));
-      setStats((prev) => ({ ...prev, workoutsCount: (allWorkouts.data || []).length }));
+      setStats((prev) => prev ? { ...prev, workoutsCount: (allWorkouts.data || []).length } : prev);
     } catch (err) {
       console.error("Ошибка загрузки профиля:", err);
     } finally {
