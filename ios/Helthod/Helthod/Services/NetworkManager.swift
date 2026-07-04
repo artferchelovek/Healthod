@@ -136,7 +136,7 @@ static let shared = NetworkManager()
         return try JSONDecoder().decode(ResponseBody.self, from: data)
     }
     
-    func uploadImage(data: Data) async throws -> String {
+    func uploadFile(data: Data, fileName: String, mimeType: String) async throws -> String {
         guard let url = URL(string: "\(baseURL)/upload") else {
             throw NetworkError.badURL
         }
@@ -145,8 +145,8 @@ static let shared = NetworkManager()
         var body = Data()
         
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
-        body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
         body.append(data)
         body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
         
@@ -177,6 +177,10 @@ static let shared = NetworkManager()
         }
         
         throw NetworkError.invalidResponse
+    }
+
+    func uploadImage(data: Data) async throws -> String {
+        try await uploadFile(data: data, fileName: "image.jpg", mimeType: "image/jpeg")
     }
     
     func patch<RequestBody: Encodable, ResponseBody: Decodable>(endpoint: String, body: RequestBody) async throws -> ResponseBody {
