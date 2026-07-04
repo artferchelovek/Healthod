@@ -11,8 +11,7 @@ struct CreateGroupView: View {
     private let manager = ChatManager.shared
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
+        VStack(spacing: 0) {
                 TextField("Название группы", text: $groupName)
                     .textFieldStyle(.plain)
                     .padding(.horizontal, 14)
@@ -108,7 +107,6 @@ struct CreateGroupView: View {
                     .disabled(groupName.trimmingCharacters(in: .whitespaces).isEmpty || selectedUsers.isEmpty || isCreating)
                 }
             }
-        }
     }
 
     private func search() async {

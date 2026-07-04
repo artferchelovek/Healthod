@@ -36,6 +36,9 @@ struct ChatListView: View {
         .background(Color(red: 0.96, green: 0.95, blue: 0.93).ignoresSafeArea())
         .navigationTitle("Сообщения")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(for: Chat.self) { chat in
+            ChatDetailView(chat: chat)
+        }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 NavigationLink(destination: CreateGroupView()) {
