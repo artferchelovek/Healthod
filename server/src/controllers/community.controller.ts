@@ -97,7 +97,7 @@ export const getCommunityById = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const id = req.params.id;
+    const id = req.params.id as string;
 
     const community = await prisma.community.findUnique({
       where: { id },
@@ -141,7 +141,8 @@ export const updateCommunity = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const id = req.params.id;
+    const id = req.params.id as string;
+
     const { name, description, avatarUrl } = req.body;
 
     const community = await prisma.community.findUnique({ where: { id } });
@@ -180,7 +181,7 @@ export const deleteCommunity = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const id = req.params.id;
+    const id = req.params.id as string;
 
     const community = await prisma.community.findUnique({ where: { id } });
 
@@ -207,7 +208,7 @@ export const joinCommunity = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const communityId = req.params.id;
+    const communityId = req.params.id as string;
 
     const community = await prisma.community.findUnique({ where: { id: communityId } });
 
@@ -248,7 +249,7 @@ export const leaveCommunity = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const communityId = req.params.id;
+    const communityId = req.params.id as string;
 
     const community = await prisma.community.findUnique({ where: { id: communityId } });
 
@@ -295,7 +296,7 @@ export const getCommunityMembers = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const communityId = req.params.id;
+    const communityId = req.params.id as string;
 
     const community = await prisma.community.findUnique({ where: { id: communityId } });
 
@@ -332,7 +333,8 @@ export const getCommunityPosts = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const communityId = req.params.id;
+    const communityId = req.params.id as string;
+    
     const userId = req.user.userId;
 
     const community = await prisma.community.findUnique({ where: { id: communityId } });

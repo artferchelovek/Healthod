@@ -92,7 +92,11 @@ router.get("/:id", authMiddleware, getPostById);
  *                   - WORKOUT
  *                   - RECIPE
  *                   - POLL
- *               imageUrl:
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               communityId:
  *                 type: string
  *               communityId:
  *                 type: string

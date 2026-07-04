@@ -10,7 +10,7 @@ export const createPost = async (req: Request, res: Response) => {
       });
     }
 
-    const { content, title, type, imageUrl, communityId } = req.body;
+    const { content, title, type, images, communityId } = req.body;
 
     if (!content || !type) {
       return res.status(400).json({
@@ -48,7 +48,7 @@ export const createPost = async (req: Request, res: Response) => {
         content,
         title,
         type,
-        imageUrl,
+        images: images || [],
         communityId,
         authorId: req.user.userId,
       },
@@ -133,6 +133,63 @@ export const getPosts = async (req: Request, res: Response) => {
     return res.status(500).json({
       error: "Internal server error",
     });
+  }
+};
+
+export const getFeed = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const userId = req.user.userId;
+
+    const following = await prisma.follow.findMany({
+      where: { followerId: userId },
+      select: { followingId: true },
+    });
+
+    const followingIds = following.map((f: { followingId: string }) => f.followingId);
+
+    const memberships = await prisma.communityMember.findMany({
+      where: { userId },
+      select: { communityId: true },
+    });
+
+    const communityIds = memberships.map((m: { communityId: string }) => m.communityId);
+
+    const posts = await prisma.post.findMany({
+      where: {
+        OR: [
+          { authorId: { in: followingIds } },
+          { communityId: { in: communityIds } },
+        ],
+      },
+      orderBy: { createdAt: "desc" },
+      include: {
+        author: {
+          select: { id: true, username: true, avatarUrl: true },
+        },
+        community: {
+          select: { id: true, name: true, avatarUrl: true },
+        },
+        likes: {
+          where: { userId },
+          select: { userId: true },
+        },
+      },
+    });
+
+    const formattedPosts = posts.map((post: typeof posts[0]) => {
+      const isLiked = post.likes.length > 0;
+      const { likes, ...postData } = post;
+      return { ...postData, isLiked, isMine: post.authorId === userId };
+    });
+
+    return res.json(formattedPosts);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
 

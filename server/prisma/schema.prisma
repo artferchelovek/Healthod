@@ -73,7 +73,7 @@ model Post {
   type          PostType
   title         String?
   content       String
-  imageUrl      String?
+  images        String[] @default([])
   likes         Like[]
 
   likesCount    Int      @default(0)
