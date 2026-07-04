@@ -27,6 +27,7 @@ model User {
   foodLogs         FoodLog[]
   healthMetrics    HealthMetric[]
   sentMessages     Message[]
+  chatParticipants ChatParticipant[]
   moodLogs         MoodLog[]
   posts            Post[]
   achievements     UserAchievement[]
@@ -182,13 +183,24 @@ model UserAchievement {
 }
 
 model Chat {
-  id          String     @id @default(uuid())
+  id          String            @id @default(uuid())
   name        String?
   type        ChatType
   communityId String?
-  createdAt   DateTime   @default(now())
-  community   Community? @relation(fields: [communityId], references: [id])
+  createdAt   DateTime          @default(now())
+  community   Community?        @relation(fields: [communityId], references: [id])
   messages    Message[]
+  participants ChatParticipant[]
+}
+
+model ChatParticipant {
+  userId    String
+  chatId    String
+  joinedAt  DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chat      Chat      @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@id([userId, chatId])
 }
 
 model Message {
