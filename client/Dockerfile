@@ -4,8 +4,6 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-# Прописываем относительный путь для API, чтобы запросы шли на тот же домен в /api
-RUN sed -i "s|^VITE_API_URL=.*|VITE_API_URL=/api|" .env
 RUN npm run build
 
 # Шаг 2: Раздача статики через Nginx

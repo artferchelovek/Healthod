@@ -7,6 +7,7 @@
 
 /client/node_modules
 /client/dist
+/client/.env
 
 # iOS secrets
 /ios/Helthod/Helthod/Secrets.plist

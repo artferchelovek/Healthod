@@ -64,16 +64,19 @@ function MediaItem({ url, alt }: { url: string; alt: string }) {
 }
 
 function Top(props: { author: any; dateString: string | Date; rightContent?: React.ReactNode }) {
+  const navigate = useNavigate();
   return (
     <div className={styles.top}>
-      {props.author.avatarUrl ? (
-        <img src={props.author.avatarUrl} alt={"avatar"} />
-      ) : (
-        <div className={styles.logoMockup}></div>
-      )}
-      <div className={styles.userInfo}>
-        <p className={styles.name}> {props.author.username} </p>
-        <p className={styles.date}> {formatRelativeTime(new Date(props.dateString))} </p>
+      <div className={styles.authorClickable} onClick={() => navigate(`/user/${props.author.id}`)}>
+        {props.author.avatarUrl ? (
+          <img src={props.author.avatarUrl} alt={"avatar"} />
+        ) : (
+          <div className={styles.logoMockup}></div>
+        )}
+        <div className={styles.userInfo}>
+          <p className={styles.name}> {props.author.username} </p>
+          <p className={styles.date}> {formatRelativeTime(new Date(props.dateString))} </p>
+        </div>
       </div>
       {props.rightContent}
     </div>
@@ -115,6 +118,18 @@ export default function PostCard({ post }: { post: PostWithAuthor }) {
       window.location.reload();
     } catch (err) {
       console.error("Ошибка удаления поста:", err);
+    }
+  };
+
+  const handleShare = async () => {
+    const url = `${window.location.origin}/${post.id}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: post.title || "Публикация", url });
+      } catch {}
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert("Ссылка скопирована в буфер обмена");
     }
   };
 
@@ -189,6 +204,10 @@ export default function PostCard({ post }: { post: PostWithAuthor }) {
         >
           <CommentIcon fill="var(--inf-soft)" width={20} height={20} />
           <p>{post.commentsCount}</p>
+        </div>
+
+        <div className={styles.share} onClick={handleShare} title="Поделиться">
+          <span className="msym" style={{ fontSize: 20, color: "var(--inf-soft)" }}>share</span>
         </div>
       </div>
     </div>

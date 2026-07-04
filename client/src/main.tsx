@@ -16,6 +16,7 @@ import Search from "@/pages/Search/Search.tsx";
 import Following from "@/pages/Following/Following.tsx";
 import Communities from "@/pages/Communities/Communities.tsx";
 import CommunityDetail from "@/pages/Communities/CommunityDetail.tsx";
+import UserProfile from "@/pages/UserProfile/UserProfile.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -36,6 +37,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/followers" element={<Following />} />
             <Route path="/communities" element={<Communities />} />
             <Route path="/communities/:id" element={<CommunityDetail />} />
+            <Route path="/user/:id" element={<UserProfile />} />
             {/* Динамический ID поста перемещен вниз, чтобы не перехватывать другие роуты */}
             <Route path="/:id" element={<Post />} />
           </Route>

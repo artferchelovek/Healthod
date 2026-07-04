@@ -146,7 +146,7 @@ export default function Search() {
               <div key={user.id} className={styles.userCard}>
                 <div
                   className={styles.userAvatar}
-                  onClick={() => navigate(`/${user.id}`)}
+                  onClick={() => navigate(`/user/${user.id}`)}
                   style={{ cursor: "pointer" }}
                 >
                   {user.avatarUrl ? (
@@ -155,7 +155,7 @@ export default function Search() {
                     <span>{user.username.charAt(0).toUpperCase()}</span>
                   )}
                 </div>
-                <div className={styles.userInfo} onClick={() => navigate(`/${user.id}`)} style={{ cursor: "pointer" }}>
+                <div className={styles.userInfo} onClick={() => navigate(`/user/${user.id}`)} style={{ cursor: "pointer" }}>
                   <span className={styles.userName}>{user.username}</span>
                   <span className={styles.userFollowers}>{user.followersCount} подписчиков</span>
                 </div>

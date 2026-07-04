@@ -130,6 +130,7 @@ export default function Chat() {
 
   const askGemini = async (userMsg: string): Promise<string> => {
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    console.log("[gemini] key:", apiKey ? apiKey.slice(0, 12) + "..." : "MISSING");
     if (!apiKey) {
       await new Promise((r) => setTimeout(r, 1500));
       return "Режим оффлайн: Я вижу твой вопрос! К сожалению, ключ VITE_GEMINI_API_KEY не задан в .env файле фронтенда, поэтому я отвечаю в демонстрационном режиме. Как только ты добавишь ключ и включишь VPN, мы сможем общаться в полноценном режиме ИИ-диалога!";
