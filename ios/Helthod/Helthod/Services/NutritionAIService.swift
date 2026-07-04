@@ -33,6 +33,14 @@ class NutritionAIService {
         return "sk-or-v1-"
     }
 
+    private let models: [String] = [
+        "qwen/qwen3-coder:free",
+        "nousresearch/hermes-3-llama-3.1-405b:free",
+        "liquid/lfm-2.5-1.2b-instruct:free",
+        "meta-llama/llama-3.2-3b-instruct:free",
+        "google/gemma-4-26b-a4b-it:free",
+    ]
+
     private init() {}
 
     func getRecommendation(age: Int, weight: Double, height: Double, goal: String) async -> AIRecommendation? {
@@ -60,8 +68,19 @@ class NutritionAIService {
             ["role": "user", "content": prompt]
         ]
 
+        for model in models {
+            if let result = await tryModel(model, messages: messages) {
+                return result
+            }
+            try? await Task.sleep(nanoseconds: 500_000_000)
+        }
+
+        return nil
+    }
+
+    private func tryModel(_ model: String, messages: [[String: Any]]) async -> AIRecommendation? {
         let body: [String: Any] = [
-            "model": "google/gemma-4-26b-a4b-it:free",
+            "model": model,
             "messages": messages,
             "temperature": 0.3,
             "max_tokens": 500
@@ -82,16 +101,18 @@ class NutritionAIService {
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
 
-            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+            guard let httpResponse = response as? HTTPURLResponse else { return nil }
+
+            guard httpResponse.statusCode == 200 else {
                 let body = String(data: data, encoding: .utf8) ?? "no body"
-                print("OpenRouter HTTP \(httpResponse.statusCode): \(body)")
+                print("OpenRouter \(model) \(httpResponse.statusCode): \(body.prefix(200))")
                 return nil
             }
 
             let apiResponse = try JSONDecoder().decode(OpenRouterResponse.self, from: data)
             guard let content = apiResponse.choices?.first?.message?.content else {
                 let raw = String(data: data, encoding: .utf8) ?? "nil"
-                print(" OpenRouter: пустой ответ, raw: \(raw.prefix(500))")
+                print("OpenRouter \(model): пустой ответ, raw: \(raw.prefix(500))")
                 return nil
             }
 
@@ -102,13 +123,13 @@ class NutritionAIService {
 
             guard let jsonData = cleaned.data(using: .utf8),
                   let recommendation = try? JSONDecoder().decode(AIRecommendation.self, from: jsonData) else {
-                print(" OpenRouter: не удалось распарсить JSON, ответ: \(cleaned.prefix(500))")
+                print("OpenRouter \(model): не удалось распарсить JSON, ответ: \(cleaned.prefix(500))")
                 return nil
             }
 
             return recommendation
         } catch {
-            print("OpenRouter ошибка: \(error)")
+            print("OpenRouter \(model) ошибка: \(error)")
             return nil
         }
     }

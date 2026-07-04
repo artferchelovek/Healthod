@@ -130,7 +130,7 @@ class ProfileViewModel: ObservableObject {
             let response: ProfileResponse = try await network.fetch(endpoint: "/profile/\(id)")
             return (response.user, response.posts, response.user.isFollowing ?? false)
         } catch {
-            print("❌ Ошибка загрузки профиля пользователя: \(error)")
+            print(" Ошибка загрузки профиля пользователя: \(error)")
             return nil
         }
     }
@@ -140,7 +140,7 @@ class ProfileViewModel: ObservableObject {
             let response: FollowResponse = try await network.post(endpoint: "/profile/\(id)/follow", body: ["": ""])
             return response.isFollowing ?? true
         } catch {
-            print("❌ Ошибка подписки: \(error)")
+            print("Ошибка подписки: \(error)")
             return false
         }
     }
@@ -150,7 +150,7 @@ class ProfileViewModel: ObservableObject {
             let response: FollowResponse = try await network.delete(endpoint: "/profile/\(id)/follow")
             return response.isFollowing ?? false
         } catch {
-            print("❌ Ошибка отписки: \(error)")
+            print(" Ошибка отписки: \(error)")
             return false
         }
     }
