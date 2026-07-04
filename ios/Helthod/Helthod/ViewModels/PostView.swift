@@ -49,31 +49,37 @@ struct PostView: View {
 
             Text(post.content)
                 .font(.body)
-            if let url = post.imageFullURL {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        HStack {
-                            Spacer()
-                            ProgressView()
-                            Spacer()
+            if !post.imageFullURLs.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(post.imageFullURLs, id: \.self) { url in
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .empty:
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
+                                        .frame(width: 240, height: 180)
+                                        .overlay(ProgressView())
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: 240, height: 180)
+                                        .clipped()
+                                        .cornerRadius(12)
+                                case .failure:
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
+                                        .frame(width: 240, height: 180)
+                                        .overlay(
+                                            Image(systemName: "photo")
+                                                .foregroundColor(.gray)
+                                        )
+                                @unknown default:
+                                    EmptyView()
+                                }
+                            }
                         }
-                        .frame(height: 200)
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .clipped()
-                            .cornerRadius(12)
-                    case .failure:
-                        Image(systemName: "photo")
-                            .foregroundColor(.gray)
-                            .frame(height: 150)
-                            .frame(maxWidth: .infinity)
-                            .background(Color.black.opacity(0.03))
-                            .cornerRadius(12)
-                    @unknown default:
-                        EmptyView()
                     }
                 }
                 .padding(.top, 4)

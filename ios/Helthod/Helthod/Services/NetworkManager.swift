@@ -218,4 +218,20 @@ static let shared = NetworkManager()
     
         return try JSONDecoder().decode(ResponseBody.self, from: data)
     }
+
+    func delete<ResponseBody: Decodable>(endpoint: String) async throws -> ResponseBody {
+        guard let url = URL(string: "\(baseURL)\(endpoint)") else {
+            throw NetworkError.badURL
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.timeoutInterval = 30
+        addAuthHeader(to: &request)
+
+        let (data, response) = try await URLSession.shared.data(for: request)
+        try handleResponse(response, data: data)
+    
+        return try JSONDecoder().decode(ResponseBody.self, from: data)
+    }
 }

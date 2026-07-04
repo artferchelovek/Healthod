@@ -19,7 +19,7 @@ struct Post: Identifiable, Codable {
     let type: String
     let title: String
     let content: String
-    let imageUrl: String?
+    let images: [String]
     let likesCount: Int
     let commentsCount: Int
     let createdAt: String
@@ -34,21 +34,28 @@ struct Post: Identifiable, Codable {
         type = try container.decode(String.self, forKey: .type)
         title = try container.decode(String.self, forKey: .title)
         content = try container.decode(String.self, forKey: .content)
-        imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
+        images = try container.decodeIfPresent([String].self, forKey: .images) ?? []
         likesCount = try container.decode(Int.self, forKey: .likesCount)
         commentsCount = try container.decode(Int.self, forKey: .commentsCount)
         createdAt = try container.decode(String.self, forKey: .createdAt)
         author = try container.decode(Author.self, forKey: .author)
         isLiked = try container.decodeIfPresent(Bool.self, forKey: .isLiked) ?? false
     }
+
+    enum CodingKeys: String, CodingKey {
+        case id, authorId, communityId, type, title, content, images
+        case likesCount, commentsCount, createdAt, author, isLiked
+    }
 }
 
 extension Post {
-    var imageFullURL: URL? {
-        guard let path = imageUrl, !path.isEmpty else { return nil }
-        if path.hasPrefix("http") { return URL(string: path) }
-        let clean = path.hasPrefix("/") ? String(path.dropFirst()) : path
-        return URL(string: "https://api.health.lilv2dim.ru/\(clean)")
+    var imageFullURLs: [URL] {
+        images.compactMap { path in
+            guard !path.isEmpty else { return nil }
+            if path.hasPrefix("http") { return URL(string: path) }
+            let clean = path.hasPrefix("/") ? String(path.dropFirst()) : path
+            return URL(string: "https://api.health.lilv2dim.ru/\(clean)")
+        }
     }
     
     var relativeDate: String {
@@ -84,7 +91,7 @@ struct CreatePostRequest: Codable {
     let title: String
     let content: String
     let type: String
-    let imageUrl: String?
+    let images: [String]
 }
 
 struct Comment: Identifiable, Codable {
@@ -143,8 +150,8 @@ class PostManager: ObservableObject {
         isLoading = false
     }
 
-    func createPost(title: String, content: String, imageUrl: String? = nil) async -> Bool {
-        let body = CreatePostRequest(title: title, content: content, type: "TEXT", imageUrl: imageUrl)
+    func createPost(title: String, content: String, images: [String] = []) async -> Bool {
+            let body = CreatePostRequest(title: title, content: content, type: "TEXT", images: images)
         do {
             try await networkManager.sendPost(endpoint: "/posts", body: body)
             await fetchPosts()
@@ -178,11 +185,11 @@ class PostManager: ObservableObject {
     func fetchFollowingPosts() async {
         isLoading = true
         do {
-            let fetchedPosts: [Post] = try await networkManager.fetch(endpoint: "/posts?filter=following")
+            let fetchedPosts: [Post] = try await networkManager.fetch(endpoint: "/posts/feed")
             self.posts = fetchedPosts
             print("Успешно загружено постов подписок: \(fetchedPosts.count)")
         } catch {
-            print("❌ Нет эндпоинта для постов подписок: \(error)")
+            print("❌ Ошибка загрузки постов подписок: \(error)")
             self.posts = []
         }
         isLoading = false

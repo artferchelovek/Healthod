@@ -43,7 +43,6 @@ struct ProfileView: View {
             }
             .task {
                 await viewModel.fetchProfile()
-                await MoodManager.shared.fetchTodayMood()
             }
         }
     }

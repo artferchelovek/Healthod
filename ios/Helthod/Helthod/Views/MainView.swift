@@ -4,6 +4,7 @@ struct MainView: View {
     @StateObject private var postManager = PostManager.shared
     @State private var isShowSheetsCreatePost: Bool = false
     @State private var feedRefreshId = UUID()
+    @State private var selectedTab = 0
 
     var body: some View {
         NavigationStack {
@@ -30,14 +31,27 @@ struct MainView: View {
                     .padding(.horizontal, 20)
                     .padding(.vertical, 12)
 
+                    Picker("", selection: $selectedTab) {
+                        Text("Все").tag(0)
+                        Text("Подписки").tag(1)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 8)
+
                     if postManager.isLoading && postManager.posts.isEmpty {
                         Spacer()
                         ProgressView("Загрузка ленты")
                         Spacer()
                     } else if postManager.posts.isEmpty {
                         Spacer()
-                        Text("Лента пуста")
-                            .foregroundColor(.gray)
+                        VStack(spacing: 8) {
+                            Image(systemName: selectedTab == 1 ? "person.2" : "text.alignleft")
+                                .font(.system(size: 28))
+                                .foregroundColor(Color(red: 0.55, green: 0.52, blue: 0.44))
+                            Text(selectedTab == 1 ? "Нет постов от подписок" : "Лента пуста")
+                                .foregroundColor(.gray)
+                        }
                         Spacer()
                     } else {
                         ScrollView {
@@ -51,7 +65,7 @@ struct MainView: View {
                             .padding(.vertical, 10)
                         }
                         .refreshable {
-                            await postManager.fetchPosts()
+                            await refreshFeed()
                             feedRefreshId = UUID()
                         }
                     }
@@ -64,8 +78,19 @@ struct MainView: View {
                 CreatePostView()
             }
             .task {
-                await postManager.fetchPosts()
+                await refreshFeed()
             }
+            .onChange(of: selectedTab) { _ in
+                Task { await refreshFeed() }
+            }
+        }
+    }
+
+    private func refreshFeed() async {
+        if selectedTab == 0 {
+            await postManager.fetchPosts()
+        } else {
+            await postManager.fetchFollowingPosts()
         }
     }
 }

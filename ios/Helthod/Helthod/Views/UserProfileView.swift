@@ -3,21 +3,23 @@ import SwiftUI
 struct UserProfileView: View {
     let userId: String
     @State private var user: UserProfile?
+    @State private var posts: [Post] = []
     @State private var isLoading = true
     @State private var isFollowing = false
     @State private var isFollowLoading = false
     @Environment(\.dismiss) private var dismiss
 
     private let currentUserId = AuthManager.shared.currentUserId
-    private let network = NetworkManager.shared
 
     var body: some View {
         Group {
             if isLoading {
                 ProgressView("Загрузка профиля")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color(red: 0.96, green: 0.95, blue: 0.93).ignoresSafeArea())
             } else if let user = user {
                 ScrollView {
-                    VStack(spacing: 20) {
+                    VStack(spacing: 0) {
                         VStack(spacing: 8) {
                             ZStack {
                                 Circle()
@@ -25,20 +27,32 @@ struct UserProfileView: View {
                                         Color(red: 0.85, green: 0.89, blue: 0.83),
                                         Color(red: 0.96, green: 0.87, blue: 0.81)
                                     ], startPoint: .topLeading, endPoint: .bottomTrailing))
-                                    .frame(width: 80, height: 80)
+                                    .frame(width: 88, height: 88)
                                 Image(systemName: "person.fill")
-                                    .font(.system(size: 32))
+                                    .font(.system(size: 36))
                                     .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
                             }
 
                             Text(user.username)
                                 .font(.title2).fontWeight(.bold)
 
+                            if !user.relativeDate.isEmpty {
+                                Text("В Healthod с \(user.relativeDate)")
+                                    .font(.subheadline)
+                                    .foregroundColor(Color(red: 0.55, green: 0.52, blue: 0.44))
+                                    .multilineTextAlignment(.center)
+                            }
+
                             if userId != currentUserId {
                                 Button(action: toggleFollow) {
                                     HStack(spacing: 6) {
-                                        Image(systemName: isFollowing ? "person.badge.minus" : "person.badge.plus")
-                                        Text(isFollowing ? "Отписаться" : "Подписаться")
+                                        if isFollowLoading {
+                                            ProgressView()
+                                                .tint(.white)
+                                        } else {
+                                            Image(systemName: isFollowing ? "person.badge.minus" : "person.badge.plus")
+                                            Text(isFollowing ? "Отписаться" : "Подписаться")
+                                        }
                                     }
                                     .font(.system(size: 14, weight: .semibold))
                                     .foregroundColor(.white)
@@ -51,10 +65,26 @@ struct UserProfileView: View {
                                 }
                                 .disabled(isFollowLoading)
                             }
+
+                            HStack(spacing: 34) {
+                                StatColumn(value: "\(posts.count)", label: "Посты")
+                                StatColumn(value: "\(user.followersCount ?? 0)", label: "Подписчики")
+                            }
+                            .padding(.vertical, 20)
                         }
-                        .padding(.top, 20)
+                        .padding(.horizontal, 20)
+
+                        if !posts.isEmpty {
+                            LazyVStack(spacing: 16) {
+                                ForEach(posts) { post in
+                                    PostView(post: post)
+                                }
+                            }
+                            .padding(.horizontal, 20)
+                            .padding(.top, 10)
+                            .padding(.bottom, 100)
+                        }
                     }
-                    .padding(.horizontal, 20)
                 }
                 .background(Color(red: 0.96, green: 0.95, blue: 0.93).ignoresSafeArea())
                 .navigationTitle(user.username)
@@ -66,6 +96,8 @@ struct UserProfileView: View {
                     Button("Повторить") { Task { await load() } }
                         .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(red: 0.96, green: 0.95, blue: 0.93).ignoresSafeArea())
             }
         }
         .task { await load() }
@@ -73,9 +105,10 @@ struct UserProfileView: View {
 
     private func load() async {
         isLoading = true
-        user = await ProfileViewModel().fetchUser(id: userId)
-        if let token = AuthManager.shared.getToken() {
-            _ = token
+        if let result = await ProfileViewModel().fetchUser(id: userId) {
+            user = result.user
+            posts = result.posts
+            isFollowing = result.isFollowing
         }
         isLoading = false
     }
@@ -83,7 +116,12 @@ struct UserProfileView: View {
     private func toggleFollow() {
         isFollowLoading = true
         Task {
-            let success = await ProfileViewModel().followUser(id: userId)
+            let success: Bool
+            if isFollowing {
+                success = await ProfileViewModel().unfollowUser(id: userId)
+            } else {
+                success = await ProfileViewModel().followUser(id: userId)
+            }
             if success {
                 isFollowing.toggle()
             }

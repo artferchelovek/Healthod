@@ -10,6 +10,8 @@ struct UserProfile: Decodable {
     let height: Double?
     let goal: String?
     let createdAt: String?
+    let isFollowing: Bool?
+    let followersCount: Int?
 
     static let goals = ["LOSE_WEIGHT", "GAIN_MUSCLE", "MAINTAIN"]
 
@@ -24,10 +26,12 @@ struct UserProfile: Decodable {
         height = try container.decodeIfPresent(Double.self, forKey: .height)
         goal = try container.decodeIfPresent(String.self, forKey: .goal)
         createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
+        isFollowing = try container.decodeIfPresent(Bool.self, forKey: .isFollowing)
+        followersCount = try container.decodeIfPresent(Int.self, forKey: .followersCount)
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, _id, email, username, age, weight, height, goal, createdAt
+        case id, _id, email, username, age, weight, height, goal, createdAt, isFollowing, followersCount
     }
 
     var goalDisplay: String {
@@ -63,6 +67,11 @@ struct UserProfile: Decodable {
             return "\(d) дней назад"
         }
     }
+}
+
+struct ProfileResponse: Decodable {
+    let user: UserProfile
+    let posts: [Post]
 }
 
 struct UpdateProfileRequest: Encodable {
@@ -116,9 +125,10 @@ class ProfileViewModel: ObservableObject {
         }
     }
 
-    func fetchUser(id: String) async -> UserProfile? {
+    func fetchUser(id: String) async -> (user: UserProfile, posts: [Post], isFollowing: Bool)? {
         do {
-            return try await network.fetch(endpoint: "/profile/\(id)")
+            let response: ProfileResponse = try await network.fetch(endpoint: "/profile/\(id)")
+            return (response.user, response.posts, response.user.isFollowing ?? false)
         } catch {
             print("❌ Ошибка загрузки профиля пользователя: \(error)")
             return nil
@@ -131,6 +141,16 @@ class ProfileViewModel: ObservableObject {
             return response.isFollowing ?? true
         } catch {
             print("❌ Ошибка подписки: \(error)")
+            return false
+        }
+    }
+
+    func unfollowUser(id: String) async -> Bool {
+        do {
+            let response: FollowResponse = try await network.delete(endpoint: "/profile/\(id)/follow")
+            return response.isFollowing ?? false
+        } catch {
+            print("❌ Ошибка отписки: \(error)")
             return false
         }
     }

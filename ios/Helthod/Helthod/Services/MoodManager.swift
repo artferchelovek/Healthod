@@ -67,16 +67,11 @@ enum Mood: String, CaseIterable, Codable {
     }
 }
 
-struct MoodResponse: Decodable {
-    let mood: String
-}
-
 @MainActor
 class MoodManager: ObservableObject {
     static let shared = MoodManager()
 
     @Published var currentMood: Mood? = nil
-    @Published var isLoading = false
 
     private let network = NetworkManager.shared
     private let defaultsKey = "user_mood"
@@ -84,15 +79,6 @@ class MoodManager: ObservableObject {
     private init() {
         if let raw = UserDefaults.standard.string(forKey: defaultsKey) {
             currentMood = Mood(rawValue: raw)
-        }
-    }
-
-    func fetchTodayMood() async {
-        do {
-            let response: MoodResponse = try await network.fetch(endpoint: "/mood/today")
-            currentMood = Mood(rawValue: response.mood)
-        } catch {
-            print("❌ Ошибка загрузки настроения: \(error)")
         }
     }
 

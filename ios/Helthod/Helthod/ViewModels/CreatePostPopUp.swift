@@ -5,8 +5,8 @@ struct CreatePostView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var title = ""
     @State private var text = ""
-    @State private var selectedPhoto: PhotosPickerItem?
-    @State private var selectedImageData: Data?
+    @State private var selectedPhotos: [PhotosPickerItem] = []
+    @State private var selectedImagesData: [Data] = []
     @State private var isUploadingImage = false
     @State private var isPosting = false
     @State private var errorMessage: String?
@@ -32,21 +32,29 @@ struct CreatePostView: View {
 
                         Divider()
 
-                        PhotosPicker(selection: $selectedPhoto, matching: .images) {
+                        PhotosPicker(selection: $selectedPhotos, maxSelectionCount: 10, matching: .images) {
                             HStack {
                                 Image(systemName: "photo.badge.plus")
-                                Text(selectedImageData == nil ? "Добавить изображение" : "Изменить изображение")
+                                Text(selectedImagesData.isEmpty ? "Добавить фото" : "Изменить фото (\(selectedImagesData.count))")
                             }
                             .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
                         }
 
-                        if let data = selectedImageData, let uiImage = UIImage(data: data) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(height: 180)
-                                .clipped()
-                                .cornerRadius(12)
+                        if !selectedImagesData.isEmpty {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(selectedImagesData.indices, id: \.self) { i in
+                                        if let uiImage = UIImage(data: selectedImagesData[i]) {
+                                            Image(uiImage: uiImage)
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                                .frame(width: 120, height: 120)
+                                                .clipped()
+                                                .cornerRadius(10)
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                     .padding()
@@ -78,12 +86,15 @@ struct CreatePostView: View {
             } message: {
                 Text(errorMessage ?? "Неизвестная ошибка")
             }
-            .onChange(of: selectedPhoto) { _, newItem in
+            .onChange(of: selectedPhotos) { _, newItems in
                 Task {
-                    guard let item = newItem else { return }
-                    if let data = try? await item.loadTransferable(type: Data.self) {
-                        selectedImageData = data
+                    var datas: [Data] = []
+                    for item in newItems {
+                        if let data = try? await item.loadTransferable(type: Data.self) {
+                            datas.append(data)
+                        }
                     }
+                    selectedImagesData = datas
                 }
             }
         }
@@ -92,18 +103,22 @@ struct CreatePostView: View {
     private func publishPost() {
         isPosting = true
         Task {
-            var imageURL: String?
+            var imageURLs: [String] = []
 
-            if let imageData = selectedImageData {
+            if !selectedImagesData.isEmpty {
                 isUploadingImage = true
-                imageURL = try? await NetworkManager.shared.uploadImage(data: imageData)
+                for imageData in selectedImagesData {
+                    if let url = try? await NetworkManager.shared.uploadImage(data: imageData) {
+                        imageURLs.append(url)
+                    }
+                }
                 isUploadingImage = false
             }
 
             let success = await PostManager.shared.createPost(
                 title: title.trimmingCharacters(in: .whitespaces),
                 content: text.trimmingCharacters(in: .whitespaces),
-                imageUrl: imageURL
+                images: imageURLs
             )
             isPosting = false
 

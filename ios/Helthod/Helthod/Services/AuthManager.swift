@@ -121,9 +121,7 @@ class AuthManager: ObservableObject {
         while payload.count % 4 != 0 { payload.append("=") }
         guard let data = Data(base64Encoded: payload),
               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return nil }
-        print("🔍 JWT payload: \(json)")
-        if let id = json["id"] ?? json["_id"] ?? json["userId"] ?? json["user_id"] ?? json["sub"] {
-            print("🔍 JWT user id = \(id)")
+        if let id = json["userId"] {
             return "\(id)"
         }
         return nil
