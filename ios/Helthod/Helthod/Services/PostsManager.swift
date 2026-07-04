@@ -9,7 +9,20 @@ import Combine
 struct Author: Codable {
     let id: String
     let username: String
-    let avatarUrl: String? 
+    let avatarUrl: String?
+
+    init(id: String, username: String, avatarUrl: String?) {
+        self.id = id
+        self.username = username
+        self.avatarUrl = avatarUrl
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(String.self, forKey: .id) ?? ""
+        username = try container.decodeIfPresent(String.self, forKey: .username) ?? ""
+        avatarUrl = try container.decodeIfPresent(String.self, forKey: .avatarUrl)
+    }
 }
 
 struct Post: Identifiable, Codable {
@@ -28,17 +41,17 @@ struct Post: Identifiable, Codable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        authorId = try container.decode(String.self, forKey: .authorId)
+        id = try container.decodeIfPresent(String.self, forKey: .id) ?? ""
+        authorId = try container.decodeIfPresent(String.self, forKey: .authorId) ?? ""
         communityId = try container.decodeIfPresent(String.self, forKey: .communityId)
-        type = try container.decode(String.self, forKey: .type)
-        title = try container.decode(String.self, forKey: .title)
-        content = try container.decode(String.self, forKey: .content)
+        type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
+        title = try container.decodeIfPresent(String.self, forKey: .title) ?? ""
+        content = try container.decodeIfPresent(String.self, forKey: .content) ?? ""
         images = try container.decodeIfPresent([String].self, forKey: .images) ?? []
-        likesCount = try container.decode(Int.self, forKey: .likesCount)
-        commentsCount = try container.decode(Int.self, forKey: .commentsCount)
-        createdAt = try container.decode(String.self, forKey: .createdAt)
-        author = try container.decode(Author.self, forKey: .author)
+        likesCount = try container.decodeIfPresent(Int.self, forKey: .likesCount) ?? 0
+        commentsCount = try container.decodeIfPresent(Int.self, forKey: .commentsCount) ?? 0
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
+        author = try container.decodeIfPresent(Author.self, forKey: .author) ?? Author(id: "", username: "", avatarUrl: nil)
         isLiked = try container.decodeIfPresent(Bool.self, forKey: .isLiked) ?? false
     }
 
@@ -54,7 +67,7 @@ extension Post {
             guard !path.isEmpty else { return nil }
             if path.hasPrefix("http") { return URL(string: path) }
             let clean = path.hasPrefix("/") ? String(path.dropFirst()) : path
-            return URL(string: "https://api.health.lilv2dim.ru/\(clean)")
+            return URL(string: "https://api.health.lilv2dim.ru/api/\(clean)")
         }
     }
     

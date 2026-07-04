@@ -118,7 +118,7 @@ struct UserProfileView: View {
         }
         .sheet(item: $chatToOpen) { chat in
             NavigationStack {
-                ChatDetailView(chatId: chat.id)
+                ChatDetailView(chat: chat)
             }
         }
         .task { await load() }

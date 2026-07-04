@@ -2,6 +2,8 @@ import { Router } from "express";
 import { authMiddleware } from "../middleware/auth.middleware";
 import {
   createChat,
+  createGroupChat,
+  searchUsers,
   getMyChats,
   getChatById,
   getChatMessages,
@@ -48,6 +50,10 @@ router.get("/", authMiddleware, getMyChats);
  *         description: Existing chat returned
  */
 router.post("/", authMiddleware, createChat);
+
+router.post("/group", authMiddleware, createGroupChat);
+
+router.get("/users/search", authMiddleware, searchUsers);
 
 /**
  * @swagger
