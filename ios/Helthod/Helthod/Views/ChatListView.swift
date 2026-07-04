@@ -22,7 +22,7 @@ struct ChatListView: View {
             } else {
                 List {
                     ForEach(manager.chats) { chat in
-                        NavigationLink(value: chat.id) {
+                        NavigationLink(value: chat) {
                             ChatRow(chat: chat)
                         }
                     }

@@ -1,6 +1,10 @@
 import Foundation
 import Combine
 
+extension Notification.Name {
+    static let newMessage = Notification.Name("newMessage")
+}
+
 struct ChatUser: Codable, Identifiable, Hashable {
     let id: String
     let username: String
