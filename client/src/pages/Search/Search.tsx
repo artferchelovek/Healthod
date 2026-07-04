@@ -19,7 +19,6 @@ export default function Search() {
   const [posts, setPosts] = useState<PostWithAuthor[]>([]);
   const [users, setUsers] = useState<SearchUser[]>([]);
   const [allPosts, setAllPosts] = useState<PostWithAuthor[]>([]);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
 

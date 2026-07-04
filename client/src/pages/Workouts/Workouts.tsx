@@ -58,20 +58,9 @@ export default function Workouts() {
   const handleDeleteExercise = async (exerciseId: string) => {
     try {
       await api.delete(`/exercises/${exerciseId}`);
-      setShowExerciseMenu(null);
       fetchWorkouts();
     } catch (err) {
       console.error("Ошибка удаления упражнения:", err);
-    }
-  };
-
-  const handleDeleteWorkout = async (workoutId: string) => {
-    if (!confirm("Удалить тренировку?")) return;
-    try {
-      await api.delete(`/workouts/${workoutId}`);
-      fetchWorkouts();
-    } catch (err) {
-      console.error("Ошибка удаления тренировки:", err);
     }
   };
 
