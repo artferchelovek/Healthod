@@ -2,6 +2,7 @@ import { Server as HttpServer } from "http";
 import { Server } from "socket.io";
 import jwt from "jsonwebtoken";
 import { prisma } from "./lib/prisma";
+import { createNotification } from "./lib/notification";
 
 let io: Server;
 
@@ -63,6 +64,14 @@ export function initSocket(httpServer: HttpServer) {
         });
         participants.forEach((p) => {
           io.to(`user:${p.userId}`).emit("message:new", message);
+          if (p.userId !== userId) {
+            createNotification({
+              userId: p.userId,
+              type: "CHAT_MESSAGE",
+              senderId: userId,
+              chatId: data.chatId,
+            });
+          }
         });
 
         if (ack) ack({ success: true, message });

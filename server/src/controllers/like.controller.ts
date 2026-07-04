@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
 import { checkAndUnlockAchievements } from "./achievement.controller";
+import { createNotification } from "../lib/notification";
 
 export const likePost = async (req: Request, res: Response) => {
   try {
@@ -41,6 +42,14 @@ export const likePost = async (req: Request, res: Response) => {
         userId,
         postId,
       },
+    });
+
+    // Create notification
+    createNotification({
+      userId: post.authorId,
+      type: "LIKE",
+      senderId: userId,
+      postId: post.id,
     });
 
     const updatedPost = await prisma.post.update({
