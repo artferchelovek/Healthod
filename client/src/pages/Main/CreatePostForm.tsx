@@ -83,13 +83,14 @@ export default function CreatePostForm({ onSubmitSuccess }: CreatePostFormProps)
       });
 
       const urls: string[] = response.data.images || [];
-      setFiles((prev) =>
-        prev.map((f, idx) => {
-          const urlIndex = prev.slice(0, prev.indexOf(f)).filter((x) => x.uploading).length;
-          const matchedUrl = urls[urlIndex];
-          return matchedUrl ? { ...f, uploadUrl: matchedUrl, uploading: false } : f;
-        }),
-      );
+      setFiles((prev) => {
+        let urlIdx = 0;
+        return prev.map((f) =>
+          f.uploading && urlIdx < urls.length
+            ? { ...f, uploadUrl: urls[urlIdx++], uploading: false }
+            : f,
+        );
+      });
     } catch (err: any) {
       console.error("Ошибка загрузки файлов:", err);
       setError(err.response?.data?.error || "Не удалось загрузить файлы");
