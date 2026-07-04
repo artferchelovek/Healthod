@@ -138,7 +138,7 @@ class ChatManager: ObservableObject {
         }
     }
 
-    func createGroupChat(name: String, participantIds: [String]) async -> Chat? {
+    func createGroupChat(name: String, participantIds: [String]) async -> (chat: Chat, communityId: String)? {
         do {
             struct Community: Decodable { let id: String }
             let community: Community = try await network.post(endpoint: "/communities", body: CreateGroupRequest(name: name))
@@ -151,12 +151,23 @@ class ChatManager: ObservableObject {
                 if !chats.contains(where: { $0.id == groupChat.id }) {
                     chats.insert(groupChat, at: 0)
                 }
-                return groupChat
+                return (groupChat, community.id)
             }
             return nil
         } catch {
             print("Ошибка создания группы: \(error)")
             return nil
+        }
+    }
+
+    func joinCommunity(id: String) async -> Bool {
+        do {
+            let _: [String: String] = try await network.post(endpoint: "/communities/\(id)/join", body: [String: String]())
+            await fetchChats()
+            return true
+        } catch {
+            print("Ошибка вступления в сообщество: \(error)")
+            return false
         }
     }
 
