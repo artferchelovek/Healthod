@@ -46,9 +46,12 @@ export default function Chat() {
   }, []);
 
   useEffect(() => {
+    connectSocket();
+  }, []);
+
+  useEffect(() => {
     if (!selectedChatId || selectedChatId === AI_CHAT_ID) return;
 
-    connectSocket();
     joinChat(selectedChatId);
 
     const loadMessages = async () => {
@@ -62,16 +65,20 @@ export default function Chat() {
     };
     loadMessages();
 
-    const unsub = onNewMessage((msg: ChatMessage) => {
-      if (msg.chatId === selectedChatId) {
-        setMessages((prev) => [...prev, msg]);
-      }
-    });
-
     return () => {
       leaveChat(selectedChatId);
-      unsub();
     };
+  }, [selectedChatId]);
+
+  useEffect(() => {
+    const unsub = onNewMessage((msg: ChatMessage) => {
+      if (selectedChatId && msg.chatId === selectedChatId) {
+        setMessages((prev) => (prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]));
+      }
+      setChats((prev) => prev.map((c) => (c.id === msg.chatId ? { ...c, lastMessage: msg } : c)));
+    });
+
+    return unsub;
   }, [selectedChatId]);
 
   useEffect(() => {
