@@ -153,6 +153,28 @@ class ChatManager: ObservableObject {
         }
     }
 
+    func joinCommunity(id: String) async -> Bool {
+        do {
+            let _: [String: String] = try await network.post(endpoint: "/communities/\(id)/join", body: [String: String]())
+            await fetchChats()
+            return true
+        } catch {
+            print("Ошибка вступления в сообщество: \(error)")
+            return false
+        }
+    }
+
+    func joinCommunity(id: String) async -> Bool {
+        do {
+            let _: [String: String] = try await network.post(endpoint: "/communities/\(id)/join", body: [String: String]())
+            await fetchChats()
+            return true
+        } catch {
+            print("Ошибка вступления в сообщество: \(error)")
+            return false
+        }
+    }
+
     func searchUsers(query: String) async -> [ChatUser] {
         do {
             return try await network.fetch(endpoint: "/profile/search?q=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? query)")

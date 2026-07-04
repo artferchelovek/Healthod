@@ -17,6 +17,16 @@ struct ChatListView: View {
                     Text("Начните общение с другими пользователями")
                         .font(.subheadline)
                         .foregroundColor(.gray)
+
+                    NavigationLink(destination: JoinGroupView()) {
+                        Label("Присоединиться по коду", systemImage: "person.badge.plus")
+                            .font(.subheadline)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color(red: 0.31, green: 0.40, blue: 0.33))
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
@@ -38,7 +48,14 @@ struct ChatListView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                NavigationLink(destination: CreateGroupView()) {
+                Menu {
+                    NavigationLink(destination: CreateGroupView()) {
+                        Label("Создать группу", systemImage: "person.3")
+                    }
+                    NavigationLink(destination: JoinGroupView()) {
+                        Label("Присоединиться по коду", systemImage: "person.badge.plus")
+                    }
+                } label: {
                     Image(systemName: "plus")
                         .font(.system(size: 16, weight: .semibold))
                 }
