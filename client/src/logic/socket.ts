@@ -10,7 +10,9 @@ export function connectSocket(): Socket {
   if (socket?.connected) return socket;
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-  const baseUrl = API_URL.replace("/api", "");
+  const baseUrl = API_URL.startsWith("/")
+    ? `${window.location.protocol}//api.${window.location.hostname}`
+    : API_URL.replace("/api", "");
 
   const token = localStorage.getItem("token");
 
