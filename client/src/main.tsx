@@ -13,6 +13,7 @@ import Workouts from "@/pages/Workouts/Workouts.tsx";
 import Post from "@/pages/Post/Post.tsx";
 import Mood from "@/pages/Mood/Mood.tsx";
 import Search from "@/pages/Search/Search.tsx";
+import Following from "@/pages/Following/Following.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -29,6 +30,8 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/workouts" element={<Workouts />} />
             <Route path="/mood" element={<Mood />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/following" element={<Following />} />
+            <Route path="/followers" element={<Following />} />
             {/* Динамический ID поста перемещен вниз, чтобы не перехватывать другие роуты */}
             <Route path="/:id" element={<Post />} />
           </Route>

@@ -6,6 +6,8 @@ import {
   followUser,
   unfollowUser,
   searchUsers,
+  getMyFollowing,
+  getMyFollowers,
 } from "../controllers/profile.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
 
@@ -78,6 +80,9 @@ router.patch("/", authMiddleware, updateProfile);
  *         description: Found users
  */
 router.get("/search", authMiddleware, searchUsers);
+
+router.get("/me/following", authMiddleware, getMyFollowing);
+router.get("/me/followers", authMiddleware, getMyFollowers);
 
 /**
  * @swagger

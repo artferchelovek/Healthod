@@ -47,24 +47,24 @@ export default function Profile() {
 
   const fetchProfile = async () => {
     try {
-      const [profileRes, achievementsRes] = await Promise.all([
+      const [authRes, profileRes] = await Promise.all([
         api.get("/auth/me"),
-        api.get("/achievements/me").catch(() => ({ data: [] })),
+        api.get("/profile/me").catch(() => null),
       ]);
-      setProfile(profileRes.data);
-      setAchievements(achievementsRes.data || []);
+      setProfile(authRes.data);
 
-      const userData = profileRes.data;
-      const allPosts = await api.get("/posts").catch(() => ({ data: [] }));
+      if (profileRes) {
+        setStats({
+          workoutsCount: 0,
+          postsCount: profileRes.data.postsCount || 0,
+          followersCount: profileRes.data.followersCount || 0,
+          followingCount: profileRes.data.followingCount || 0,
+        });
+        setAchievements(profileRes.data.achievements || []);
+      }
+
       const allWorkouts = await api.get("/workouts").catch(() => ({ data: [] }));
-      const myPosts = (allPosts.data || []).filter((p: any) => p.authorId === userData.id);
-
-      setStats({
-        workoutsCount: (allWorkouts.data || []).length,
-        postsCount: myPosts.length,
-        followersCount: Math.floor(Math.random() * 200 + 50),
-        followingCount: Math.floor(Math.random() * 50 + 10),
-      });
+      setStats((prev) => ({ ...prev, workoutsCount: (allWorkouts.data || []).length }));
     } catch (err) {
       console.error("Ошибка загрузки профиля:", err);
     } finally {
@@ -169,11 +169,11 @@ export default function Profile() {
             <span className={styles.statValue}>{stats?.postsCount || 0}</span>
             <span className={styles.statLabel}>Посты</span>
           </div>
-          <div className={styles.stat}>
+          <div className={styles.stat} onClick={() => navigate("/followers")} style={{ cursor: "pointer" }}>
             <span className={styles.statValue}>{stats?.followersCount || 0}</span>
             <span className={styles.statLabel}>Подписчики</span>
           </div>
-          <div className={styles.stat}>
+          <div className={styles.stat} onClick={() => navigate("/following")} style={{ cursor: "pointer" }}>
             <span className={styles.statValue}>{stats?.followingCount || 0}</span>
             <span className={styles.statLabel}>Подписки</span>
           </div>
