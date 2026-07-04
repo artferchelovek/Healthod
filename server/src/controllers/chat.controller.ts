@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
 import { getIO } from "../socket";
+import { createNotification } from "../lib/notification";
 
 export const createChat = async (req: Request, res: Response) => {
   try {
@@ -244,6 +245,14 @@ export const sendMessage = async (req: Request, res: Response) => {
       });
       participants.forEach((p) => {
         io.to(`user:${p.userId}`).emit("message:new", message);
+        if (p.userId !== req.user!.userId) {
+          createNotification({
+            userId: p.userId,
+            type: "CHAT_MESSAGE",
+            senderId: req.user!.userId,
+            chatId,
+          });
+        }
       });
     } catch (e) {
       // socket not initialized yet
