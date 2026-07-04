@@ -1,24 +1,14 @@
-//
-//  ContentView.swift
-//  Helthod
-//
-//  Created by Сергей Лихачев on 03.07.2026.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject private var authManager = AuthManager.shared
+    @ObservedObject private var postsManager = PostManager.shared
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if authManager.isAuthenticated {
+            
+            MainTabView()
+        } else {
+            AuthView()
         }
-        .padding()
     }
-}
-
-#Preview {
-    ContentView()
 }
