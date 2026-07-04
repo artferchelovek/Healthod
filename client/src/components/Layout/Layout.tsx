@@ -8,6 +8,7 @@ import Workout from "@/assets/icons/workout.svg?react";
 import Nutrition from "@/assets/icons/fork.svg?react";
 import ChatIcon from "@/assets/icons/chat.svg?react";
 import Account from "@/assets/icons/account.svg?react";
+import InstallPrompt from "@/components/InstallPrompt/InstallPrompt";
 
 function Header() {
   const location = useLocation();
@@ -90,6 +91,7 @@ export default function Layout() {
     <div className={`${styles.layout} ${isChatRoom ? styles.chatRoomLayout : ""}`}>
       {!isChatRoom && <Header />}
       <Outlet />
+      {!isChatRoom && <InstallPrompt />}
       {!isChatRoom && <Footer />}
     </div>
   );
