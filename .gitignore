@@ -1,0 +1,15 @@
+.idea
+
+.DS_STORE
+
+
+#front
+
+/client/node_modules
+/client/dist
+
+#back
+
+/server/node_modules
+/server/.env
+/server/prisma/migrations
