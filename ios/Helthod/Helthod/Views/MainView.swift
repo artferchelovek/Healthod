@@ -20,13 +20,6 @@ struct MainView: View {
 
                         HStack(spacing: 20) {
                             Button(action: {
-                                print("Поиск нажат")
-                            }) {
-                                Image(systemName: "magnifyingglass")
-                                    .foregroundColor(.black)
-                            }
-
-                            Button(action: {
                                 isShowSheetsCreatePost = true
                             }) {
                                 Image(systemName: "plus")
@@ -63,6 +56,9 @@ struct MainView: View {
                         }
                     }
                 }
+            }
+            .navigationDestination(for: String.self) { userId in
+                UserProfileView(userId: userId)
             }
             .sheet(isPresented: $isShowSheetsCreatePost) {
                 CreatePostView()

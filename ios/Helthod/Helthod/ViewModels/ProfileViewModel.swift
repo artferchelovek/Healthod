@@ -1,17 +1,46 @@
 import Foundation
 import SwiftUI
 import Combine
-struct UserProfile: Codable {
+struct UserProfile: Decodable {
     let id: String
-    let email: String
+    let email: String?
     let username: String
-    let age: Int
-    let weight: Double
-    let height: Double
-    let goal: String
-    let createdAt: String
+    let age: Int?
+    let weight: Double?
+    let height: Double?
+    let goal: String?
+    let createdAt: String?
+
+    static let goals = ["LOSE_WEIGHT", "GAIN_MUSCLE", "MAINTAIN"]
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(String.self, forKey: .id)
+            ?? container.decode(String.self, forKey: ._id)
+        email = try container.decodeIfPresent(String.self, forKey: .email)
+        username = try container.decode(String.self, forKey: .username)
+        age = try container.decodeIfPresent(Int.self, forKey: .age)
+        weight = try container.decodeIfPresent(Double.self, forKey: .weight)
+        height = try container.decodeIfPresent(Double.self, forKey: .height)
+        goal = try container.decodeIfPresent(String.self, forKey: .goal)
+        createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt)
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id, _id, email, username, age, weight, height, goal, createdAt
+    }
+
+    var goalDisplay: String {
+        switch goal {
+        case "LOSE_WEIGHT": return "Сбросить вес"
+        case "GAIN_MUSCLE": return "Набрать массу"
+        case "MAINTAIN": return "Поддерживать форму"
+        default: return goal ?? ""
+        }
+    }
 
     var relativeDate: String {
+        guard let createdAt = createdAt else { return "" }
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         guard let date = formatter.date(from: createdAt) else { return createdAt }
@@ -34,22 +63,27 @@ struct UserProfile: Codable {
             return "\(d) дней назад"
         }
     }
+}
 
-    var goalDisplay: String {
-        switch goal {
-        case "LOSE_WEIGHT": return "Сбросить вес"
-        case "GAIN_MUSCLE": return "Набрать массу"
-        case "MAINTAIN": return "Поддерживать форму"
-        default: return goal
-        }
-    }
+struct UpdateProfileRequest: Encodable {
+    let username: String
+    let age: Int
+    let weight: Double
+    let height: Double
+    let goal: String
+}
+
+struct FollowResponse: Decodable {
+    let isFollowing: Bool?
 }
 
 @MainActor
 class ProfileViewModel: ObservableObject {
     @Published var profile: UserProfile?
     @Published var isLoading = false
+    @Published var isSaving = false
     @Published var error: String?
+    @Published var saveError: String?
     @Published var showingSettings = false
 
     private let network = NetworkManager.shared
@@ -64,6 +98,41 @@ class ProfileViewModel: ObservableObject {
             self.error = error.localizedDescription
         }
         isLoading = false
+    }
+
+    func updateProfile(username: String, age: Int, weight: Double, height: Double, goal: String) async -> Bool {
+        isSaving = true
+        saveError = nil
+        let body = UpdateProfileRequest(username: username, age: age, weight: weight, height: height, goal: goal)
+        do {
+            try await network.sendPatch(endpoint: "/profile", body: body)
+            await fetchProfile()
+            isSaving = false
+            return true
+        } catch {
+            saveError = error.localizedDescription
+            isSaving = false
+            return false
+        }
+    }
+
+    func fetchUser(id: String) async -> UserProfile? {
+        do {
+            return try await network.fetch(endpoint: "/profile/\(id)")
+        } catch {
+            print("❌ Ошибка загрузки профиля пользователя: \(error)")
+            return nil
+        }
+    }
+
+    func followUser(id: String) async -> Bool {
+        do {
+            let response: FollowResponse = try await network.post(endpoint: "/profile/\(id)/follow", body: ["": ""])
+            return response.isFollowing ?? true
+        } catch {
+            print("❌ Ошибка подписки: \(error)")
+            return false
+        }
     }
 
     func logout() {

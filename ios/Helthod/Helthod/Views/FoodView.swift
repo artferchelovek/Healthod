@@ -183,10 +183,10 @@ struct FoodView: View {
             do {
                 let profile: UserProfile = try await network.fetch(endpoint: "/auth/me")
                 let recommendation = await NutritionAIService.shared.getRecommendation(
-                    age: profile.age,
-                    weight: profile.weight,
-                    height: profile.height,
-                    goal: profile.goal
+                    age: profile.age ?? 25,
+                    weight: profile.weight ?? 70,
+                    height: profile.height ?? 170,
+                    goal: profile.goal ?? "MAINTAIN"
                 )
                 aiLoading = false
                 if let recommendation = recommendation {

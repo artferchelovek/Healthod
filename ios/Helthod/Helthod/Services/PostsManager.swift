@@ -175,6 +175,19 @@ class PostManager: ObservableObject {
         }
     }
 
+    func fetchFollowingPosts() async {
+        isLoading = true
+        do {
+            let fetchedPosts: [Post] = try await networkManager.fetch(endpoint: "/posts?filter=following")
+            self.posts = fetchedPosts
+            print("Успешно загружено постов подписок: \(fetchedPosts.count)")
+        } catch {
+            print("❌ Нет эндпоинта для постов подписок: \(error)")
+            self.posts = []
+        }
+        isLoading = false
+    }
+
     func deletePost(id: String) async -> Bool {
         do {
             let _: [String: String] = try await networkManager.delete(endpoint: "/posts/\(id)", body: ["": ""])

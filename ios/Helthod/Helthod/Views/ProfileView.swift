@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @StateObject private var viewModel = ProfileViewModel()
+    @State private var showEditProfile = false
 
     var body: some View {
         NavigationStack {
@@ -42,6 +43,7 @@ struct ProfileView: View {
             }
             .task {
                 await viewModel.fetchProfile()
+                await MoodManager.shared.fetchTodayMood()
             }
         }
     }
@@ -72,7 +74,7 @@ struct ProfileView: View {
                         .multilineTextAlignment(.center)
 
                     HStack(spacing: 10) {
-                        Button(action: {}) {
+                        Button(action: { showEditProfile = true }) {
                             Text("Редактировать")
                                 .font(.system(size: 14, weight: .semibold))
                                 .foregroundColor(.white)
@@ -93,6 +95,9 @@ struct ProfileView: View {
                         }
                     }
                     .padding(.top, 4)
+                    .sheet(isPresented: $showEditProfile) {
+                        EditProfileView(viewModel: viewModel)
+                    }
 
                     HStack(spacing: 34) {
                         StatColumn(value: "42", label: "Тренировки")
@@ -104,6 +109,12 @@ struct ProfileView: View {
                 .padding(.horizontal, 20)
 
                 VStack(spacing: 0) {
+                    sectionHeader("НАСТРОЕНИЕ")
+                        .padding(.bottom, 8)
+
+                    MoodSelectorView()
+                        .padding(.bottom, 12)
+
                     sectionHeader("ДОСТИЖЕНИЯ")
                         .padding(.bottom, 8)
 

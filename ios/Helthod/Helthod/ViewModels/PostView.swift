@@ -18,7 +18,11 @@ struct PostView: View {
         VStack(alignment: .leading, spacing: 20) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(post.author.username)
+                    NavigationLink(value: post.authorId) {
+                        Text(post.author.username)
+                            .fontWeight(.semibold)
+                    }
+                    .buttonStyle(.plain)
                     Text(post.relativeDate).font(.caption).opacity(0.7)
                 }
                 Spacer()
