@@ -155,7 +155,7 @@ class ChatManager: ObservableObject {
 
     func searchUsers(query: String) async -> [ChatUser] {
         do {
-            return try await network.fetch(endpoint: "/chats/users/search?q=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? query)")
+            return try await network.fetch(endpoint: "/profile/search?q=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? query)")
         } catch {
             print("Ошибка поиска пользователей: \(error)")
             return []
