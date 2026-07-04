@@ -7,6 +7,41 @@ enum PostType: String, Codable {
     case poll = "POLL"
 }
 
+private enum FileType {
+    case image, video, document
+}
+
+private func fileType(for url: URL) -> FileType {
+    let ext = url.pathExtension.lowercased()
+    switch ext {
+    case "jpg", "jpeg", "png", "gif", "webp", "heic", "heif":
+        return .image
+    case "mp4", "mov", "m4v", "webm", "avi":
+        return .video
+    default:
+        return .document
+    }
+}
+
+private func fileName(from url: URL) -> String {
+    let name = url.lastPathComponent
+    if let range = name.range(of: "^\\d+-", options: .regularExpression) {
+        return String(name[range.upperBound...])
+    }
+    return name
+}
+
+private func fileIcon(for url: URL) -> String {
+    let ext = url.pathExtension.lowercased()
+    switch ext {
+    case "pdf": return "doc.richtext"
+    case "txt", "csv": return "doc.text"
+    case "xls", "xlsx": return "doc.text.magnifyingglass"
+    case "zip", "rar", "gz": return "folder.fill"
+    case "mp3", "wav", "aac": return "music.note"
+    default: return "doc.fill"
+    }
+}
 
 struct PostView: View {
     let post: Post
@@ -49,41 +84,50 @@ struct PostView: View {
 
             Text(post.content)
                 .font(.body)
+
             if !post.imageFullURLs.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
                         ForEach(post.imageFullURLs, id: \.self) { url in
-                            AsyncImage(url: url) { phase in
-                                switch phase {
-                                case .empty:
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
-                                        .frame(width: 240, height: 180)
-                                        .overlay(ProgressView())
-                                case .success(let image):
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 240, height: 180)
-                                        .clipped()
-                                        .cornerRadius(12)
-                                case .failure:
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
-                                        .frame(width: 240, height: 180)
-                                        .overlay(
-                                            Image(systemName: "photo")
-                                                .foregroundColor(.gray)
-                                        )
-                                @unknown default:
-                                    EmptyView()
+                            switch fileType(for: url) {
+                            case .image:
+                                AsyncImage(url: url) { phase in
+                                    switch phase {
+                                    case .empty:
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
+                                            .frame(width: 240, height: 180)
+                                            .overlay(ProgressView())
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                            .frame(width: 240, height: 180)
+                                            .clipped()
+                                            .cornerRadius(12)
+                                    case .failure:
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
+                                            .frame(width: 240, height: 180)
+                                            .overlay(
+                                                Image(systemName: "photo")
+                                                    .foregroundColor(.gray)
+                                            )
+                                    @unknown default:
+                                        EmptyView()
+                                    }
                                 }
+                            case .video:
+                                VideoThumbnailView(url: url)
+                            case .document:
+                                FileAttachmentView(url: url)
                             }
                         }
                     }
                 }
                 .padding(.top, 4)
             }
+
             LikeButtonView(postId: post.id, initialLikesCount: post.likesCount, commentsCount: post.commentsCount, isLiked: post.isLiked, onCommentsTap: { showComments = true })
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -106,3 +150,47 @@ struct PostView: View {
     }
 }
 
+private struct VideoThumbnailView: View {
+    let url: URL
+
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
+                .frame(width: 240, height: 180)
+            VStack(spacing: 8) {
+                Image(systemName: "play.circle.fill")
+                    .font(.system(size: 40))
+                    .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
+                Text(fileName(from: url))
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .lineLimit(1)
+                    .padding(.horizontal, 8)
+            }
+        }
+    }
+}
+
+private struct FileAttachmentView: View {
+    let url: URL
+
+    var body: some View {
+        RoundedRectangle(cornerRadius: 12)
+            .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
+            .frame(width: 180, height: 120)
+            .overlay(
+                VStack(spacing: 6) {
+                    Image(systemName: fileIcon(for: url))
+                        .font(.system(size: 32))
+                        .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
+                    Text(fileName(from: url))
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .lineLimit(2)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 8)
+                }
+            )
+    }
+}

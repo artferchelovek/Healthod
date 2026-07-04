@@ -21,6 +21,12 @@ const storage = multer.diskStorage({
 const ALLOWED_MIMES = [
   "image/jpeg", "image/png", "image/gif", "image/webp",
   "video/mp4", "video/mpeg", "video/webm", "video/quicktime",
+  "application/pdf", "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "text/plain", "text/csv",
+  "application/zip", "application/x-rar-compressed",
 ];
 
 export const upload = multer({
@@ -30,7 +36,7 @@ export const upload = multer({
     if (ALLOWED_MIMES.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error("Only image and video files are allowed"));
+      cb(new Error("Unsupported file type"));
     }
   },
 });
