@@ -224,6 +224,7 @@ export const joinCommunity = async (req: Request, res: Response) => {
     }
 
     const communityId = req.params.id as string;
+    const targetUserId = req.body.userId || req.user.userId;
 
     const community = await prisma.community.findUnique({ where: { id: communityId } });
 
@@ -231,10 +232,14 @@ export const joinCommunity = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Community not found" });
     }
 
+    if (targetUserId !== req.user.userId && community.ownerId !== req.user.userId) {
+      return res.status(403).json({ error: "Only the owner can add other users" });
+    }
+
     const existing = await prisma.communityMember.findUnique({
       where: {
         userId_communityId: {
-          userId: req.user.userId,
+          userId: targetUserId,
           communityId,
         },
       },
@@ -246,7 +251,7 @@ export const joinCommunity = async (req: Request, res: Response) => {
 
     await prisma.communityMember.create({
       data: {
-        userId: req.user.userId,
+        userId: targetUserId,
         communityId,
       },
     });
@@ -258,12 +263,12 @@ export const joinCommunity = async (req: Request, res: Response) => {
     if (communityChat) {
       const exists = await prisma.chatParticipant.findUnique({
         where: {
-          userId_chatId: { userId: req.user.userId, chatId: communityChat.id },
+          userId_chatId: { userId: targetUserId, chatId: communityChat.id },
         },
       });
       if (!exists) {
         await prisma.chatParticipant.create({
-          data: { userId: req.user.userId, chatId: communityChat.id },
+          data: { userId: targetUserId, chatId: communityChat.id },
         });
       }
     }
@@ -366,82 +371,6 @@ export const getCommunityMembers = async (req: Request, res: Response) => {
     }));
 
     return res.json(formatted);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-};
-
-export const inviteToCommunity = async (req: Request, res: Response) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const communityId = req.params.id as string;
-    const { userIds } = req.body;
-
-    if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
-      return res.status(400).json({ error: "userIds array is required" });
-    }
-
-    const community = await prisma.community.findUnique({ where: { id: communityId } });
-
-    if (!community) {
-      return res.status(404).json({ error: "Community not found" });
-    }
-
-    const existingMembers = await prisma.communityMember.findMany({
-      where: { communityId },
-      select: { userId: true },
-    });
-
-    const existingIds = existingMembers.map((m: { userId: string }) => m.userId);
-    const newIds = userIds.filter((id: string) => !existingIds.includes(id));
-
-    if (newIds.length === 0) {
-      return res.json({ message: "All users are already members" });
-    }
-
-    const users = await prisma.user.findMany({
-      where: { id: { in: newIds } },
-      select: { id: true },
-    });
-
-    if (users.length !== newIds.length) {
-      return res.status(400).json({ error: "Some users not found" });
-    }
-
-    await prisma.communityMember.createMany({
-      data: newIds.map((id: string) => ({
-        userId: id,
-        communityId,
-      })),
-    });
-
-    const communityChat = await prisma.chat.findFirst({
-      where: { communityId, type: "COMMUNITY" },
-    });
-
-    if (communityChat) {
-      const existingChatParticipants = await prisma.chatParticipant.findMany({
-        where: { chatId: communityChat.id },
-        select: { userId: true },
-      });
-      const existingChatIds = existingChatParticipants.map((p: { userId: string }) => p.userId);
-      const newChatIds = newIds.filter((id: string) => !existingChatIds.includes(id));
-
-      if (newChatIds.length > 0) {
-        await prisma.chatParticipant.createMany({
-          data: newChatIds.map((id: string) => ({
-            userId: id,
-            chatId: communityChat.id,
-          })),
-        });
-      }
-    }
-
-    return res.json({ message: `Invited ${newIds.length} users` });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });

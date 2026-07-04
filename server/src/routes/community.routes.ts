@@ -8,7 +8,6 @@ import {
   deleteCommunity,
   joinCommunity,
   leaveCommunity,
-  inviteToCommunity,
   getCommunityMembers,
   getCommunityPosts,
 } from "../controllers/community.controller";
@@ -182,8 +181,6 @@ router.delete("/:id", authMiddleware, deleteCommunity);
  *         description: Community not found
  */
 router.post("/:id/join", authMiddleware, joinCommunity);
-
-router.post("/:id/invite", authMiddleware, inviteToCommunity);
 
 /**
  * @swagger

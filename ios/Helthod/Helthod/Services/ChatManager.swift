@@ -81,10 +81,6 @@ struct CreateGroupRequest: Codable {
     let name: String
 }
 
-struct InviteRequest: Codable {
-    let userIds: [String]
-}
-
 @MainActor
 class ChatManager: ObservableObject {
     static let shared = ChatManager()
@@ -146,8 +142,8 @@ class ChatManager: ObservableObject {
         do {
             struct Community: Decodable { let id: String }
             let community: Community = try await network.post(endpoint: "/communities", body: CreateGroupRequest(name: name))
-            if !participantIds.isEmpty {
-                let _: [String: String]? = try? await network.post(endpoint: "/communities/\(community.id)/invite", body: InviteRequest(userIds: participantIds))
+            for id in participantIds {
+                let _: [String: String]? = try? await network.post(endpoint: "/communities/\(community.id)/join", body: ["userId": id])
             }
             try? await Task.sleep(nanoseconds: 500_000_000)
             let allChats: [Chat] = try await network.fetch(endpoint: "/chats")
