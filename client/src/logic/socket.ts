@@ -9,12 +9,15 @@ export function getSocket(): Socket | null {
 }
 
 export function connectSocket(): Socket {
-  if (socket) return socket;
+  if (socket?.connected) return socket;
+  if (socket) { socket.disconnect(); socket = null; }
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
   const baseUrl = API_URL.startsWith("/")
     ? window.location.origin
     : new URL(API_URL).origin;
+
+  console.log("[socket] connecting to", baseUrl);
 
   const token = localStorage.getItem("token");
 
@@ -24,7 +27,15 @@ export function connectSocket(): Socket {
   });
 
   socket.on("connect_error", (err) => {
-    console.error("Socket connection error:", err.message);
+    console.error("[socket] connection error:", err.message);
+  });
+
+  socket.on("connect", () => {
+    console.log("[socket] connected");
+  });
+
+  socket.on("disconnect", (reason) => {
+    console.log("[socket] disconnected:", reason);
   });
 
   return socket;

@@ -31,9 +31,14 @@ export default function Chat() {
     ? chats.find((c) => c.id === selectedChatId)
     : null;
 
-  const otherParticipant = currentChat
+  const isGroupChat = currentChat?.type === "COMMUNITY";
+  const otherParticipant = currentChat && !isGroupChat
     ? currentChat.participants.find((p) => p.userId !== userId)?.user
     : null;
+
+  const chatTitle = selectedChatId === AI_CHAT_ID
+    ? "Healthod AI"
+    : currentChat?.name || otherParticipant?.username || "Чат";
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -179,10 +184,12 @@ export default function Chat() {
   };
 
   const chatList = [
-    { id: AI_CHAT_ID, name: "Healthod AI", avatarUrl: null, online: true, lastMsg: "Спроси меня о тренировках!" },
+    { id: AI_CHAT_ID, name: "Healthod AI", avatarUrl: null, online: true, lastMsg: "Спроси меня о тренировках!", isGroup: false },
     ...chats.map((c) => {
-      const other = c.participants.find((p) => p.userId !== userId)?.user;
-      return { id: c.id, name: other?.username || "Чат", avatarUrl: other?.avatarUrl || null, online: false, lastMsg: c.lastMessage?.content || "" };
+      const isGroup = c.type === "COMMUNITY";
+      const name = isGroup ? c.name || "Групповой чат" : (c.participants.find((p) => p.userId !== userId)?.user?.username || "Чат");
+      const avatarUrl = isGroup ? null : (c.participants.find((p) => p.userId !== userId)?.user?.avatarUrl || null);
+      return { id: c.id, name, avatarUrl, online: false, lastMsg: c.lastMessage?.content || "", isGroup };
     }),
   ];
 
@@ -217,10 +224,12 @@ export default function Chat() {
           <div className={styles.chatsList}>
             {chatList.map((chat) => (
               <div key={chat.id} className={`${styles.chatCard} ${chat.id === AI_CHAT_ID ? styles.aiCardSpecial : ""}`} onClick={() => handleSelectChat(chat.id)}>
-                <div className={styles.avatarWrapper}>
-                  <div className={styles.avatar} style={{ backgroundColor: chat.id === AI_CHAT_ID ? "var(--mustard)" : "var(--green-soft)" }}>
+                  <div className={styles.avatarWrapper}>
+                  <div className={styles.avatar} style={{ backgroundColor: chat.id === AI_CHAT_ID ? "var(--mustard)" : chat.isGroup ? "var(--mustard)" : "var(--green-soft)" }}>
                     {chat.id === AI_CHAT_ID ? (
                       <svg className="aiSparkIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /></svg>
+                    ) : chat.isGroup ? (
+                      <span className="msym" style={{ fontSize: 20 }}>groups</span>
                     ) : chat.avatarUrl ? (
                       <img src={chat.avatarUrl} alt="" className={styles.avatarImg} />
                     ) : (
@@ -250,15 +259,18 @@ export default function Chat() {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></svg>
           </button>
           <div className={styles.chatHeaderInfo}>
-            <div className={styles.chatHeaderAvatar} style={{ backgroundColor: selectedChatId === AI_CHAT_ID ? "var(--mustard)" : "var(--green-soft)" }}>
+            <div className={styles.chatHeaderAvatar} style={{ backgroundColor: selectedChatId === AI_CHAT_ID ? "var(--mustard)" : isGroupChat ? "var(--mustard)" : "var(--green-soft)" }}>
               {selectedChatId === AI_CHAT_ID ? (
                 <svg className="aiSparkIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /></svg>
+              ) : isGroupChat ? (
+                <span className="msym" style={{ fontSize: 18 }}>groups</span>
               ) : (
                 otherParticipant?.username?.charAt(0)?.toUpperCase() || "?"
               )}
             </div>
             <div>
-              <div className={styles.chatHeaderName}>{selectedChatId === AI_CHAT_ID ? "Healthod AI" : otherParticipant?.username || "Чат"}</div>
+              <div className={styles.chatHeaderName}>{chatTitle}</div>
+              {isGroupChat && <div className={styles.chatHeaderSub}>Групповой чат</div>}
             </div>
           </div>
         </div>

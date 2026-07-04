@@ -1,0 +1,225 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    padding-bottom: 90px;
+}
+
+.loading {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--inf-soft);
+}
+
+.backBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--green-dark);
+    font-family: var(--font-main);
+    font-size: var(--fs-body);
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 0;
+    align-self: flex-start;
+}
+
+.backBtn:hover {
+    color: var(--green);
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    background: var(--surface);
+    padding: 24px 16px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+}
+
+.avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: var(--green-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.avatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatarLetter {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--green-dark);
+}
+
+.name {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--ink);
+    margin: 0;
+}
+
+.desc {
+    font-size: var(--fs-body);
+    color: var(--inf-soft);
+    margin: 0;
+    max-width: 300px;
+}
+
+.stats {
+    display: flex;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--inf-soft);
+    font-weight: 600;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.joinBtn, .leaveBtn, .chatBtn, .inviteBtn {
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: background-color 0.2s;
+}
+
+.joinBtn {
+    background: var(--green-dark);
+    color: var(--surface);
+}
+
+.joinBtn:hover {
+    background: var(--green);
+}
+
+.leaveBtn {
+    background: var(--surface-muted);
+    color: var(--terracotta);
+    border: 1px solid var(--terracotta-soft);
+}
+
+.leaveBtn:hover {
+    background: var(--terracotta-soft);
+}
+
+.chatBtn {
+    background: var(--green);
+    color: var(--surface);
+}
+
+.chatBtn:hover {
+    background: var(--green-dark);
+}
+
+.inviteBtn {
+    background: var(--surface-muted);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    padding: 8px 12px;
+}
+
+.inviteBtn:hover {
+    background: var(--line);
+}
+
+.section {
+    background: var(--surface);
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+}
+
+.sectionTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 14px 16px;
+    background: none;
+    border: none;
+    font-family: var(--font-main);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.membersList {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--line);
+}
+
+.memberRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+}
+
+.memberRow + .memberRow {
+    border-top: 1px solid var(--line);
+}
+
+.memberAvatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--green-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--green-dark);
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.memberAvatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.memberName {
+    flex: 1;
+    font-size: var(--fs-body);
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.ownerBadge {
+    font-size: 11px;
+    color: var(--mustard);
+    font-weight: 700;
+    background: var(--mustard-soft, rgba(200, 155, 60, 0.12));
+    padding: 2px 8px;
+    border-radius: 6px;
+}

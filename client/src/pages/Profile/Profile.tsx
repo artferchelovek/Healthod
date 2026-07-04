@@ -294,6 +294,13 @@ export default function Profile() {
         </div>
       </div>
 
+      <div className={styles.section}>
+        <button className={styles.logoutBtn} onClick={() => { localStorage.removeItem("token"); navigate("/auth"); }}>
+          <span className="msym" style={{ fontSize: 18 }}>logout</span>
+          Выйти из аккаунта
+        </button>
+      </div>
+
       <Modal isOpen={isEditOpen} onClose={() => setIsEditOpen(false)} title="Редактировать профиль">
         <form onSubmit={handleEditSubmit} className={styles.editForm}>
           <div className={styles.fieldGroup}>

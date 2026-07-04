@@ -27,6 +27,9 @@ function Header() {
         </button>
       ) : (
         <div className={styles.layoutButtons}>
+          <button className={styles.iconBtn} onClick={() => navigate("/communities")} aria-label="Сообщества">
+            <span className="msym" style={{ fontSize: 22 }}>groups</span>
+          </button>
           <button className={styles.iconBtn} onClick={() => navigate("/search")} aria-label="Поиск">
             <Search fill="var(--ink)" />
           </button>

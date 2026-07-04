@@ -349,6 +349,11 @@
     line-height: 1.2;
 }
 
+.chatHeaderSub {
+    font-size: 11px;
+    color: var(--inf-soft);
+}
+
 .chatHeaderStatus {
     font-size: 11px;
     color: var(--inf-soft);
