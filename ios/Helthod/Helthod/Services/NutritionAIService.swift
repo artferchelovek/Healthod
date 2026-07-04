@@ -34,11 +34,10 @@ class NutritionAIService {
     }
 
     private let models: [String] = [
+        "openai/gpt-4o-mini",
         "qwen/qwen3-coder:free",
         "nousresearch/hermes-3-llama-3.1-405b:free",
         "liquid/lfm-2.5-1.2b-instruct:free",
-        "meta-llama/llama-3.2-3b-instruct:free",
-        "google/gemma-4-26b-a4b-it:free",
     ]
 
     private init() {}
