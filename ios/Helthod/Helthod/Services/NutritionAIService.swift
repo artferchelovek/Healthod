@@ -24,7 +24,14 @@ struct OpenRouterMessage: Decodable {
 class NutritionAIService {
     static let shared = NutritionAIService()
 
-    private let apiKey = "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"
+    private var apiKey: String {
+        if let path = Bundle.main.path(forResource: "Secrets", ofType: "plist"),
+           let dict = NSDictionary(contentsOfFile: path),
+           let key = dict["OPENROUTER_API_KEY"] as? String {
+            return key
+        }
+        return "sk-or-v1-"
+    }
 
     private init() {}
 
