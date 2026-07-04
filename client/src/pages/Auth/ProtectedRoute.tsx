@@ -7,7 +7,7 @@ export const ProtectedRoute = () => {
 
   useEffect(() => {
     if (token) {
-      setupWebPush().catch((err: any) => {
+      setupWebPush().catch((err: unknown) => {
         console.error("Failed to setup web push:", err);
       });
     }

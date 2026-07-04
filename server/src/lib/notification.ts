@@ -13,7 +13,6 @@ interface CreateNotificationParams {
   chatId?: string;
 }
 
-// Set up VAPID details for Web Push
 const publicVapidKey = process.env.VAPID_PUBLIC_KEY;
 const privateVapidKey = process.env.VAPID_PRIVATE_KEY;
 const vapidEmail = process.env.VAPID_EMAIL || "mailto:admin@healthod.ru";
@@ -86,15 +85,12 @@ export async function createNotification(params: CreateNotificationParams) {
       },
     });
 
-    // 1. Emit via socket.io (In-app real-time)
     try {
       const io = getIO();
       io.to(`user:${params.userId}`).emit("notification:new", notification);
     } catch (err) {
-      // Socket.io not initialized
     }
 
-    // 2. Send via Web Push (background service worker push)
     try {
       const subscriptions = await prisma.pushSubscription.findMany({
         where: { userId: params.userId },
@@ -119,7 +115,6 @@ export async function createNotification(params: CreateNotificationParams) {
           };
 
           webpush.sendNotification(pushSubscription, payload).catch(async (err) => {
-            // Clean up invalid/expired subscriptions (404 Not Found, 410 Gone)
             if (err.statusCode === 404 || err.statusCode === 410) {
               await prisma.pushSubscription.delete({
                 where: { id: sub.id },

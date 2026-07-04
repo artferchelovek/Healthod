@@ -9,6 +9,8 @@ import type { Chat as ChatType, ChatMessage, ChatUser } from "@/logic/chat";
 
 const AI_CHAT_ID = "ai-assistant";
 
+const getTempId = (prefix: string) => `${prefix}-${Date.now()}`;
+
 export default function Chat() {
   const { id: selectedChatId } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -98,14 +100,13 @@ export default function Chat() {
     const text = inputText.trim();
     setInputText("");
     setSending(true);
-
     try {
       if (selectedChatId === AI_CHAT_ID) {
-        const userMsg = { id: `msg-${Date.now()}`, chatId: AI_CHAT_ID, senderId: userId || "", content: text, createdAt: new Date().toISOString(), sender: { id: "", username: "Вы", avatarUrl: null } };
+        const userMsg = { id: getTempId("msg"), chatId: AI_CHAT_ID, senderId: userId || "", content: text, createdAt: new Date().toISOString(), sender: { id: "", username: "Вы", avatarUrl: null } };
         setMessages((prev) => [...prev, userMsg]);
 
         const aiText = await askGemini(text);
-        const aiMsg = { id: `msg-ai-${Date.now()}`, chatId: AI_CHAT_ID, senderId: "ai", content: aiText, createdAt: new Date().toISOString(), sender: { id: "ai", username: "Healthod AI", avatarUrl: null } };
+        const aiMsg = { id: getTempId("msg-ai"), chatId: AI_CHAT_ID, senderId: "ai", content: aiText, createdAt: new Date().toISOString(), sender: { id: "ai", username: "Healthod AI", avatarUrl: null } };
         setMessages((prev) => [...prev, aiMsg]);
       } else {
         const msg = await sendMessage(selectedChatId, text);

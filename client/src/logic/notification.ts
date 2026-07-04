@@ -1,4 +1,5 @@
 import { api } from "./api";
+import { Socket } from "socket.io-client";
 
 export type NotificationType = "LIKE" | "COMMENT" | "CHAT_MESSAGE";
 
@@ -34,14 +35,14 @@ export async function markNotificationAsRead(id: string): Promise<Notification> 
   return res.data;
 }
 
-export function onNewNotification(socket: any, cb: (notification: Notification) => void) {
+export function onNewNotification(socket: Socket | null, cb: (notification: Notification) => void) {
   socket?.on("notification:new", cb);
   return () => {
     socket?.off("notification:new", cb);
   };
 }
 
-export async function subscribeToPush(subscription: any) {
+export async function subscribeToPush(subscription: PushSubscription) {
   const res = await api.post("/notifications/subscribe", subscription);
   return res.data;
 }
@@ -53,7 +54,7 @@ export async function unsubscribeFromPush(endpoint: string) {
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);
   for (let i = 0; i < rawData.length; ++i) {

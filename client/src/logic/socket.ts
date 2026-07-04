@@ -1,5 +1,7 @@
 import { io, Socket } from "socket.io-client";
 
+import type { ChatMessage } from "./chat";
+
 let socket: Socket | null = null;
 
 export function getSocket(): Socket | null {
@@ -43,11 +45,11 @@ export function leaveChat(chatId: string) {
   socket?.emit("chat:leave", chatId);
 }
 
-export function sendMessageViaSocket(chatId: string, content: string, ack?: (res: any) => void) {
+export function sendMessageViaSocket(chatId: string, content: string, ack?: (res: unknown) => void) {
   socket?.emit("message:send", { chatId, content }, ack);
 }
 
-export function onNewMessage(cb: (msg: any) => void) {
+export function onNewMessage(cb: (msg: ChatMessage) => void) {
   socket?.on("message:new", cb);
   return () => { socket?.off("message:new", cb); };
 }
