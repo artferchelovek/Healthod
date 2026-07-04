@@ -31,7 +31,12 @@ struct Chat: Codable, Identifiable, Hashable {
 
     var displayName: String {
         if let name = name, !name.isEmpty { return name }
+        if type == "COMMUNITY" { return name ?? "Сообщество" }
         return participants?.first { $0.userId != AuthManager.shared.currentUserId }?.user.username ?? "Чат"
+    }
+
+    var isGroup: Bool {
+        type == "GROUP" || type == "COMMUNITY"
     }
 }
 
@@ -70,6 +75,14 @@ struct MessagesResponse: Codable {
 
 struct CreateMessageRequest: Codable {
     let content: String
+}
+
+struct CreateGroupRequest: Codable {
+    let name: String
+}
+
+struct InviteRequest: Codable {
+    let userIds: [String]
 }
 
 @MainActor
@@ -126,6 +139,37 @@ class ChatManager: ObservableObject {
         } catch {
             print("Ошибка отправки сообщения: \(error)")
             return nil
+        }
+    }
+
+    func createGroupChat(name: String, participantIds: [String]) async -> Chat? {
+        do {
+            struct Community: Decodable { let id: String }
+            let community: Community = try await network.post(endpoint: "/communities", body: CreateGroupRequest(name: name))
+            if !participantIds.isEmpty {
+                let _: [String: String]? = try? await network.post(endpoint: "/communities/\(community.id)/invite", body: InviteRequest(userIds: participantIds))
+            }
+            try? await Task.sleep(nanoseconds: 500_000_000)
+            let allChats: [Chat] = try await network.fetch(endpoint: "/chats")
+            if let groupChat = allChats.first(where: { $0.communityId == community.id }) {
+                if !chats.contains(where: { $0.id == groupChat.id }) {
+                    chats.insert(groupChat, at: 0)
+                }
+                return groupChat
+            }
+            return nil
+        } catch {
+            print("Ошибка создания группы: \(error)")
+            return nil
+        }
+    }
+
+    func searchUsers(query: String) async -> [ChatUser] {
+        do {
+            return try await network.fetch(endpoint: "/profile/search?q=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? query)")
+        } catch {
+            print("Ошибка поиска пользователей: \(error)")
+            return []
         }
     }
 

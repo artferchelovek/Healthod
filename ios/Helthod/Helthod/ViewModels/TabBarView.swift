@@ -45,9 +45,6 @@ struct MainTabView: View {
             Tab("Сообщения", systemImage: "message.fill", value: .message) {
                 NavigationStack {
                     ChatListView()
-                        .navigationDestination(for: Chat.self) { chat in
-                            ChatDetailView(chatId: chat.id)
-                        }
                 }
             }
             Tab("Питание", systemImage: "fork.knife", value: .foodRate) {

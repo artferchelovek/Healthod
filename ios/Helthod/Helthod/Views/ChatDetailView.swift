@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ChatDetailView: View {
-    let chatId: String
+    let chat: Chat
     @State private var messages: [Message] = []
     @State private var inputText = ""
     @State private var isLoading = true
@@ -34,7 +34,7 @@ struct ChatDetailView: View {
                     ScrollView {
                         LazyVStack(spacing: 8) {
                             ForEach(messages) { msg in
-                                MessageBubble(message: msg)
+                                MessageBubble(message: msg, isGroup: chat.isGroup)
                                     .id(msg.id)
                             }
                         }
@@ -80,18 +80,18 @@ struct ChatDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await loadMessages()
-            manager.startPolling(chatId: chatId) { newMessages in
+            manager.startPolling(chatId: chat.id) { newMessages in
                 messages = newMessages
             }
         }
         .onDisappear {
-            manager.stopPolling(chatId: chatId)
+            manager.stopPolling(chatId: chat.id)
         }
     }
 
     private func loadMessages() async {
         isLoading = true
-        if let response = await manager.fetchMessages(chatId: chatId) {
+        if let response = await manager.fetchMessages(chatId: chat.id) {
             messages = response.messages
         }
         isLoading = false
@@ -103,7 +103,7 @@ struct ChatDetailView: View {
         isSending = true
         inputText = ""
         Task {
-            if let msg = await manager.sendMessage(chatId: chatId, content: text) {
+            if let msg = await manager.sendMessage(chatId: chat.id, content: text) {
                 messages.append(msg)
             }
             isSending = false
@@ -113,12 +113,19 @@ struct ChatDetailView: View {
 
 struct MessageBubble: View {
     let message: Message
+    let isGroup: Bool
 
     var body: some View {
         HStack {
             if message.isMine { Spacer(minLength: 50) }
 
             VStack(alignment: message.isMine ? .trailing : .leading, spacing: 4) {
+                if isGroup && !message.isMine, let sender = message.sender {
+                    Text(sender.username)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(Color(red: 0.55, green: 0.52, blue: 0.44))
+                        .padding(.horizontal, 14)
+                }
                 Text(message.content)
                     .font(.system(size: 15))
                     .foregroundColor(message.isMine ? .white : Color(red: 0.13, green: 0.11, blue: 0.08))

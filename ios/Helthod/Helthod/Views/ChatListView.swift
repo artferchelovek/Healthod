@@ -36,6 +36,17 @@ struct ChatListView: View {
         .background(Color(red: 0.96, green: 0.95, blue: 0.93).ignoresSafeArea())
         .navigationTitle("Сообщения")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(for: Chat.self) { chat in
+            ChatDetailView(chat: chat)
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                NavigationLink(destination: CreateGroupView()) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 16, weight: .semibold))
+                }
+            }
+        }
         .task { await manager.fetchChats() }
     }
 }
@@ -52,14 +63,25 @@ struct ChatRow: View {
                         Color(red: 0.96, green: 0.87, blue: 0.81)
                     ], startPoint: .topLeading, endPoint: .bottomTrailing))
                     .frame(width: 48, height: 48)
-                Image(systemName: "person.fill")
+                Image(systemName: chat.isGroup ? "person.2.fill" : "person.fill")
                     .font(.system(size: 18))
                     .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
             }
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(chat.displayName)
-                    .font(.system(size: 16, weight: .semibold))
+                HStack(spacing: 6) {
+                    Text(chat.displayName)
+                        .font(.system(size: 16, weight: .semibold))
+                    if chat.isGroup, let count = chat.participants?.count {
+                        Text("\(count)")
+                            .font(.system(size: 11))
+                            .foregroundColor(.gray)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.gray.opacity(0.15))
+                            .cornerRadius(8)
+                    }
+                }
 
                 if let last = chat.lastMessage {
                     Text(last.content)
