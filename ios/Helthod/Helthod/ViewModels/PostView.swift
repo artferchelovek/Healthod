@@ -49,8 +49,6 @@ struct PostView: View {
     @State private var showComments = false
     @State private var showDeleteAlert = false
     @State private var isDeleting = false
-    @State private var showVideoPlayer = false
-    @State private var videoURL: URL?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -121,7 +119,7 @@ struct PostView: View {
                                     }
                                 }
                             case .video:
-                                VideoThumbnailView(url: url, onPlay: { videoURL = $0; showVideoPlayer = true })
+                                VideoThumbnailView(url: url, onPlay: { playVideo(url: $0) })
                             case .document:
                                 FileAttachmentView(url: url)
                             }
@@ -139,11 +137,6 @@ struct PostView: View {
         .sheet(isPresented: $showComments) {
             CommentsView(postId: post.id)
         }
-        .fullScreenCover(isPresented: $showVideoPlayer) {
-            if let url = videoURL {
-                VideoPlayerView(url: url)
-            }
-        }
         .alert("Удалить пост?", isPresented: $showDeleteAlert) {
             Button("Удалить", role: .destructive) {
                 isDeleting = true
@@ -154,6 +147,17 @@ struct PostView: View {
             Button("Отмена", role: .cancel) {}
         } message: {
             Text("Пост «\(post.title)» будет удалён навсегда.")
+        }
+    }
+
+    private func playVideo(url: URL) {
+        let player = AVPlayer(url: url)
+        let playerVC = AVPlayerViewController()
+        playerVC.player = player
+        playerVC.modalPresentationStyle = .fullScreen
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let root = scene.windows.first?.rootViewController {
+            root.present(playerVC, animated: true) { player.play() }
         }
     }
 }
@@ -180,35 +184,6 @@ private struct VideoThumbnailView: View {
         }
         .contentShape(Rectangle())
         .onTapGesture { onPlay(url) }
-    }
-}
-
-private struct VideoPlayerView: View {
-    let url: URL
-    @Environment(\.dismiss) private var dismiss
-    @State private var player: AVPlayer
-
-    init(url: URL) {
-        self.url = url
-        _player = State(initialValue: AVPlayer(url: url))
-    }
-
-    var body: some View {
-        VideoPlayer(player: player)
-            .ignoresSafeArea()
-            .onAppear { player.play() }
-            .overlay(alignment: .topTrailing) {
-                Button {
-                    player.pause()
-                    dismiss()
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 30))
-                        .foregroundColor(.white)
-                        .shadow(radius: 4)
-                        .padding(16)
-                }
-            }
     }
 }
 
