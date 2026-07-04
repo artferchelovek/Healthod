@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "@/logic/api";
 import { getUserIdFromToken } from "@/logic/utils";
-import { connectSocket, joinChat, leaveChat, onNewMessage } from "@/logic/socket";
+import { connectSocket, onNewMessage } from "@/logic/socket";
 import { getMyChats, getChatMessages, createChat, sendMessage } from "@/logic/chat";
 import type { Chat as ChatType, ChatMessage, ChatUser } from "@/logic/chat";
 
@@ -53,8 +53,6 @@ export default function Chat() {
   useEffect(() => {
     if (!selectedChatId || selectedChatId === AI_CHAT_ID) return;
 
-    joinChat(selectedChatId);
-
     const loadMessages = async () => {
       try {
         const data = await getChatMessages(selectedChatId);
@@ -65,10 +63,6 @@ export default function Chat() {
       }
     };
     loadMessages();
-
-    return () => {
-      leaveChat(selectedChatId);
-    };
   }, [selectedChatId]);
 
   useEffect(() => {

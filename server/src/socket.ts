@@ -57,6 +57,13 @@ export function initSocket(httpServer: HttpServer) {
         });
 
         io.to(`chat:${data.chatId}`).emit("message:new", message);
+        const participants = await prisma.chatParticipant.findMany({
+          where: { chatId: data.chatId },
+          select: { userId: true },
+        });
+        participants.forEach((p) => {
+          io.to(`user:${p.userId}`).emit("message:new", message);
+        });
 
         if (ack) ack({ success: true, message });
       } catch (error) {

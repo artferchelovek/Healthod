@@ -236,7 +236,15 @@ export const sendMessage = async (req: Request, res: Response) => {
     });
 
     try {
-      getIO().to(`chat:${chatId}`).emit("message:new", message);
+      const io = getIO();
+      io.to(`chat:${chatId}`).emit("message:new", message);
+      const participants = await prisma.chatParticipant.findMany({
+        where: { chatId },
+        select: { userId: true },
+      });
+      participants.forEach((p) => {
+        io.to(`user:${p.userId}`).emit("message:new", message);
+      });
     } catch (e) {
       // socket not initialized yet
     }
