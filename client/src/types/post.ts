@@ -2,7 +2,7 @@ export interface PostWithAuthor {
   id: string;
   title: string | null;
   content: string;
-  imageUrl: string | null;
+  images: string[];
   authorId: string;
   communityId: string | null;
   likesCount: number;

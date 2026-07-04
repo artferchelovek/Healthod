@@ -29,14 +29,15 @@ function Top(props: { author: any; dateString: string | Date; rightContent?: Rea
 function Content(props: {
   title: string | null;
   content: string;
-  imageUrl: string | null;
+  images: string[];
 }) {
+  const firstImage = props.images[0];
   return (
     <div className={styles.content}>
       {props.title && <p className={styles.title}> {props.title} </p>}
       <p className={styles.description}> {props.content} </p>
-      {props.imageUrl && (
-        <img className={styles.image} src={props.imageUrl} alt="" />
+      {firstImage && (
+        <img className={styles.image} src={`${import.meta.env.VITE_API_URL}${firstImage}`} alt="" />
       )}
     </div>
   );
@@ -62,7 +63,6 @@ export default function PostCard({ post }: { post: PostWithAuthor }) {
 
   const handleLike = async () => {
     const willLike = !isLiked;
-    console.log(`${import.meta.env.VITE_API_URL}${post.imageUrl}`);
 
     setIsLiked(willLike);
     setLikesCount(willLike ? likesCount + 1 : likesCount - 1);
@@ -107,7 +107,7 @@ export default function PostCard({ post }: { post: PostWithAuthor }) {
       <Content
         title={post.title}
         content={post.content}
-        imageUrl={`${import.meta.env.VITE_API_URL}${post.imageUrl}`}
+        images={post.images}
       />
 
       <div className={styles.footer}>

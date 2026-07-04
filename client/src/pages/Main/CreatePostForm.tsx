@@ -76,7 +76,7 @@ export default function CreatePostForm({ onSubmitSuccess }: CreatePostFormProps)
         title: title.trim() || null,
         content: content.trim(),
         type: "TEXT",
-        imageUrl: imageUrl.trim() || null,
+        images: imageUrl.trim() ? [imageUrl.trim()] : [],
       };
 
       await api.post("/posts", payload);
