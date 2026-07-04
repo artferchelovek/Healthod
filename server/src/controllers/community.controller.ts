@@ -30,6 +30,21 @@ export const createCommunity = async (req: Request, res: Response) => {
       },
     });
 
+    const chat = await prisma.chat.create({
+      data: {
+        type: "COMMUNITY",
+        communityId: community.id,
+        name: name.trim(),
+      },
+    });
+
+    await prisma.chatParticipant.create({
+      data: {
+        userId: req.user.userId,
+        chatId: chat.id,
+      },
+    });
+
     checkAndUnlockAchievements(req.user.userId);
 
     return res.status(201).json(community);
@@ -236,6 +251,23 @@ export const joinCommunity = async (req: Request, res: Response) => {
       },
     });
 
+    const communityChat = await prisma.chat.findFirst({
+      where: { communityId, type: "COMMUNITY" },
+    });
+
+    if (communityChat) {
+      const exists = await prisma.chatParticipant.findUnique({
+        where: {
+          userId_chatId: { userId: req.user.userId, chatId: communityChat.id },
+        },
+      });
+      if (!exists) {
+        await prisma.chatParticipant.create({
+          data: { userId: req.user.userId, chatId: communityChat.id },
+        });
+      }
+    }
+
     return res.json({ message: "Joined community" });
   } catch (error) {
     console.error(error);
@@ -282,6 +314,19 @@ export const leaveCommunity = async (req: Request, res: Response) => {
         },
       },
     });
+
+    const communityChat = await prisma.chat.findFirst({
+      where: { communityId, type: "COMMUNITY" },
+    });
+
+    if (communityChat) {
+      await prisma.chatParticipant.deleteMany({
+        where: {
+          userId: req.user.userId,
+          chatId: communityChat.id,
+        },
+      });
+    }
 
     return res.json({ message: "Left community" });
   } catch (error) {
