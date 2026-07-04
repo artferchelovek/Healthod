@@ -165,25 +165,39 @@ struct PostView: View {
 private struct VideoThumbnailView: View {
     let url: URL
     let onPlay: (URL) -> Void
+    @State private var thumbnail: UIImage?
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color(red: 0.94, green: 0.93, blue: 0.91))
                 .frame(width: 240, height: 180)
-            VStack(spacing: 8) {
-                Image(systemName: "play.circle.fill")
-                    .font(.system(size: 40))
-                    .foregroundColor(Color(red: 0.31, green: 0.40, blue: 0.33))
-                Text(fileName(from: url))
-                    .font(.caption)
-                    .foregroundColor(.gray)
-                    .lineLimit(1)
-                    .padding(.horizontal, 8)
+            if let image = thumbnail {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 240, height: 180)
+                    .clipped()
+                    .cornerRadius(12)
             }
+            Image(systemName: "play.circle.fill")
+                .font(.system(size: 40))
+                .foregroundColor(.white)
+                .shadow(radius: 4)
         }
         .contentShape(Rectangle())
         .onTapGesture { onPlay(url) }
+        .task { await loadThumbnail() }
+    }
+
+    private func loadThumbnail() async {
+        let asset = AVAsset(url: url)
+        let gen = AVAssetImageGenerator(asset: asset)
+        gen.appliesPreferredTrackTransform = true
+        gen.maximumSize = CGSize(width: 480, height: 360)
+        if let cg = try? await gen.image(at: .zero).image {
+            thumbnail = UIImage(cgImage: cg)
+        }
     }
 }
 
