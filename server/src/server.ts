@@ -26,7 +26,7 @@ const app = express();
 const PORT = Number(process.env.PORT) || 5000;
 
 app.use(cors({
-  origin: ["http://localhost:8000", process.env.FRONTEND_URL || "https://health.lilv2dim.ru"],
+  origin: true,
   credentials: true,
 }));
 app.use(express.json());
