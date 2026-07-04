@@ -9,6 +9,60 @@ import HeartFilled from "@/assets/icons/heart_favourite_filled.svg?react";
 import CommentIcon from "@/assets/icons/comment.svg?react";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE = import.meta.env.VITE_API_URL || "";
+
+function getFileType(url: string): "image" | "video" | "audio" | "document" {
+  const ext = url.split(".").pop()?.toLowerCase() || "";
+  if (["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"].includes(ext)) return "image";
+  if (["mp4", "webm", "mov", "avi", "mpeg", "mpg"].includes(ext)) return "video";
+  if (["mp3", "wav", "ogg", "aac", "flac"].includes(ext)) return "audio";
+  return "document";
+}
+
+function getFileIcon(url: string): string {
+  const ext = url.split(".").pop()?.toLowerCase() || "";
+  if (ext === "pdf") return "picture_as_pdf";
+  if (["doc", "docx"].includes(ext)) return "description";
+  if (["xls", "xlsx", "csv"].includes(ext)) return "table_chart";
+  if (["zip", "rar", "7z", "gz", "tar"].includes(ext)) return "folder_zip";
+  if (["txt", "json"].includes(ext)) return "article";
+  return "insert_drive_file";
+}
+
+function MediaItem({ url, alt }: { url: string; alt: string }) {
+  const fullUrl = `${API_BASE}${url}`;
+  const type = getFileType(url);
+
+  if (type === "image") {
+    return <img className={styles.mediaImage} src={fullUrl} alt={alt} loading="lazy" />;
+  }
+  if (type === "video") {
+    return (
+      <video className={styles.mediaVideo} src={fullUrl} controls preload="metadata">
+        Ваш браузер не поддерживает видео.
+      </video>
+    );
+  }
+  if (type === "audio") {
+    return (
+      <div className={styles.mediaAudioWrapper}>
+        <span className={`msym ${styles.mediaAudioIcon}`}>music_note</span>
+        <audio className={styles.mediaAudio} src={fullUrl} controls preload="none">
+          Ваш браузер не поддерживает аудио.
+        </audio>
+      </div>
+    );
+  }
+  const name = url.split("/").pop() || url;
+  return (
+    <a className={styles.mediaDocLink} href={fullUrl} target="_blank" rel="noopener noreferrer" download>
+      <span className={`msym ${styles.mediaDocIcon}`}>{getFileIcon(url)}</span>
+      <span className={styles.mediaDocName}>{name}</span>
+      <span className={`msym ${styles.mediaDocDownload}`}>download</span>
+    </a>
+  );
+}
+
 function Top(props: { author: any; dateString: string | Date; rightContent?: React.ReactNode }) {
   return (
     <div className={styles.top}>
@@ -31,13 +85,16 @@ function Content(props: {
   content: string;
   images: string[];
 }) {
-  const firstImage = props.images[0];
   return (
     <div className={styles.content}>
       {props.title && <p className={styles.title}> {props.title} </p>}
       <p className={styles.description}> {props.content} </p>
-      {firstImage && (
-        <img className={styles.image} src={`${import.meta.env.VITE_API_URL}${firstImage}`} alt="" />
+      {props.images.length > 0 && (
+        <div className={styles.mediaGrid}>
+          {props.images.map((url, i) => (
+            <MediaItem key={i} url={url} alt={`Медиа ${i + 1}`} />
+          ))}
+        </div>
       )}
     </div>
   );

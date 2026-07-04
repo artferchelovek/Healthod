@@ -144,3 +144,80 @@
 .menuItem:last-child {
     color: var(--terracotta);
 }
+
+.mediaGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.mediaImage {
+    width: 100%;
+    border-radius: 12px;
+    display: block;
+}
+
+.mediaVideo {
+    width: 100%;
+    border-radius: 12px;
+    display: block;
+    background: #000;
+}
+
+.mediaAudioWrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface-muted);
+    border-radius: 10px;
+    border: 1px solid var(--line);
+}
+
+.mediaAudioIcon {
+    font-size: 26px;
+    color: var(--green);
+}
+
+.mediaAudio {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+}
+
+.mediaDocLink {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface-muted);
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    text-decoration: none;
+    color: var(--ink);
+    transition: background-color 0.2s ease;
+}
+
+.mediaDocLink:hover {
+    background: var(--line);
+}
+
+.mediaDocIcon {
+    font-size: 24px;
+    color: var(--inf-soft);
+}
+
+.mediaDocName {
+    flex: 1;
+    font-size: var(--fs-body);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mediaDocDownload {
+    font-size: 18px;
+    color: var(--green);
+    flex-shrink: 0;
+}

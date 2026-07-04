@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styles from "./Main.module.css";
 import { api } from "@/logic/api";
 
@@ -6,54 +6,105 @@ interface CreatePostFormProps {
   onSubmitSuccess: () => void;
 }
 
+interface FileEntry {
+  id: string;
+  file: File;
+  previewUrl: string;
+  uploadUrl: string;
+  uploading: boolean;
+  error: boolean;
+}
+
+const FILE_ICONS: Record<string, string> = {
+  "image": "image",
+  "video": "videocam",
+  "audio": "music_note",
+  "pdf": "picture_as_pdf",
+  "text": "description",
+  "archive": "folder_zip",
+  "default": "insert_drive_file",
+};
+
+function getFileCategory(mime: string): string {
+  if (mime.startsWith("image/")) return "image";
+  if (mime.startsWith("video/")) return "video";
+  if (mime.startsWith("audio/")) return "audio";
+  if (mime === "application/pdf") return "pdf";
+  if (mime.startsWith("text/")) return "text";
+  if (mime.includes("zip") || mime.includes("rar") || mime.includes("tar") || mime.includes("7z") || mime.includes("gzip")) return "archive";
+  return "default";
+}
+
+function getFileIcon(mime: string): string {
+  return FILE_ICONS[getFileCategory(mime)] || FILE_ICONS.default;
+}
+
 export default function CreatePostForm({ onSubmitSuccess }: CreatePostFormProps) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [files, setFiles] = useState<FileEntry[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Состояния для загрузки изображения
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const hasUploading = files.some((f) => f.uploading);
+  const uploadedUrls = files.filter((f) => f.uploadUrl).map((f) => f.uploadUrl);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const selectedFiles = e.target.files;
+    if (!selectedFiles || selectedFiles.length === 0) return;
 
-    // Показываем локальное превью
-    const previewUrl = URL.createObjectURL(file);
-    setImagePreview(previewUrl);
-    setUploading(true);
     setError(null);
+    const newFiles: FileEntry[] = [];
 
-    // Формируем FormData для отправки файла на бэкенд
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const file = selectedFiles[i];
+      const id = `${Date.now()}-${i}`;
+      newFiles.push({
+        id,
+        file,
+        previewUrl: URL.createObjectURL(file),
+        uploadUrl: "",
+        uploading: true,
+        error: false,
+      });
+    }
+
+    setFiles((prev) => [...prev, ...newFiles]);
+
     const formData = new FormData();
-    formData.append("file", file);
+    for (let i = 0; i < selectedFiles.length; i++) {
+      formData.append("files", selectedFiles[i]);
+    }
 
     try {
-      const response = await api.post("/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const response = await api.post("/upload/multiple", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      // Сохраняем полученный от бэкенда путь к файлу
-      setImageUrl(response.data.imageUrl);
+      const urls: string[] = response.data.images || [];
+      setFiles((prev) =>
+        prev.map((f, idx) => {
+          const urlIndex = prev.slice(0, prev.indexOf(f)).filter((x) => x.uploading).length;
+          const matchedUrl = urls[urlIndex];
+          return matchedUrl ? { ...f, uploadUrl: matchedUrl, uploading: false } : f;
+        }),
+      );
     } catch (err: any) {
-      console.error("Ошибка загрузки изображения:", err);
-      setError(err.response?.data?.error || "Не удалось загрузить изображение");
-      // В случае ошибки сбрасываем превью
-      setImagePreview(null);
-      setImageUrl("");
-    } finally {
-      setUploading(false);
+      console.error("Ошибка загрузки файлов:", err);
+      setError(err.response?.data?.error || "Не удалось загрузить файлы");
+      setFiles((prev) =>
+        prev.map((f) => (f.uploading ? { ...f, uploading: false, error: true } : f)),
+      );
     }
   };
 
-  const handleRemoveImage = () => {
-    setImagePreview(null);
-    setImageUrl("");
+  const handleRemoveFile = (id: string) => {
+    setFiles((prev) => {
+      const entry = prev.find((f) => f.id === id);
+      if (entry) URL.revokeObjectURL(entry.previewUrl);
+      return prev.filter((f) => f.id !== id);
+    });
   };
 
   const handleCreatePost = async (e: React.FormEvent) => {
@@ -63,8 +114,8 @@ export default function CreatePostForm({ onSubmitSuccess }: CreatePostFormProps)
       return;
     }
 
-    if (uploading) {
-      setError("Пожалуйста, подождите завершения загрузки изображения");
+    if (hasUploading) {
+      setError("Пожалуйста, подождите завершения загрузки файлов");
       return;
     }
 
@@ -72,19 +123,17 @@ export default function CreatePostForm({ onSubmitSuccess }: CreatePostFormProps)
       setLoading(true);
       setError(null);
 
-      const payload = {
+      await api.post("/posts", {
         title: title.trim() || null,
         content: content.trim(),
         type: "TEXT",
-        images: imageUrl.trim() ? [imageUrl.trim()] : [],
-      };
+        images: uploadedUrls,
+      });
 
-      await api.post("/posts", payload);
-
+      files.forEach((f) => URL.revokeObjectURL(f.previewUrl));
       setTitle("");
       setContent("");
-      setImageUrl("");
-      setImagePreview(null);
+      setFiles([]);
       onSubmitSuccess();
     } catch (err: any) {
       console.error(err);
@@ -92,6 +141,58 @@ export default function CreatePostForm({ onSubmitSuccess }: CreatePostFormProps)
     } finally {
       setLoading(false);
     }
+  };
+
+  const renderPreview = (entry: FileEntry) => {
+    const cat = getFileCategory(entry.file.type);
+
+    if (cat === "image") {
+      return (
+        <div className={styles.filePreviewCard} key={entry.id}>
+          <img src={entry.previewUrl} className={styles.filePreviewImage} alt="" />
+          {entry.uploading && <div className={styles.uploadOverlay}>Загрузка...</div>}
+          {!entry.uploading && (
+            <button type="button" className={styles.removeFileBtn} onClick={() => handleRemoveFile(entry.id)}>&times;</button>
+          )}
+        </div>
+      );
+    }
+
+    if (cat === "video") {
+      return (
+        <div className={styles.filePreviewCard} key={entry.id}>
+          <video src={entry.previewUrl} className={styles.filePreviewVideo} controls />
+          {entry.uploading && <div className={styles.uploadOverlay}>Загрузка...</div>}
+          {!entry.uploading && (
+            <button type="button" className={styles.removeFileBtn} onClick={() => handleRemoveFile(entry.id)}>&times;</button>
+          )}
+        </div>
+      );
+    }
+
+    if (cat === "audio") {
+      return (
+        <div className={`${styles.filePreviewCard} ${styles.filePreviewAudioCard}`} key={entry.id}>
+          <span className={`msym ${styles.fileAudioIcon}`}>music_note</span>
+          <span className={styles.filePreviewName}>{entry.file.name}</span>
+          <audio src={entry.previewUrl} controls className={styles.filePreviewAudio} />
+          {!entry.uploading && (
+            <button type="button" className={styles.removeFileBtn} onClick={() => handleRemoveFile(entry.id)}>&times;</button>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className={`${styles.filePreviewCard} ${styles.filePreviewDocCard}`} key={entry.id}>
+        <span className={`msym ${styles.fileDocIcon}`}>{getFileIcon(entry.file.type)}</span>
+        <span className={styles.filePreviewName}>{entry.file.name}</span>
+        {entry.uploading && <span className={styles.uploadingLabel}>Загрузка...</span>}
+        {!entry.uploading && (
+          <button type="button" className={styles.removeFileBtn} onClick={() => handleRemoveFile(entry.id)}>&times;</button>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -123,43 +224,32 @@ export default function CreatePostForm({ onSubmitSuccess }: CreatePostFormProps)
         />
       </div>
 
-      {/* Поле выбора и превью изображения */}
       <div className={styles.fieldGroup}>
-        <label>Изображение публикации</label>
-        
-        {imagePreview ? (
-          <div className={styles.previewContainer}>
-            <img src={imagePreview} className={styles.imagePreview} alt="Превью" />
-            {uploading ? (
-              <div className={styles.uploadOverlay}>Загрузка...</div>
-            ) : (
-              <button 
-                type="button" 
-                className={styles.removeImageBtn} 
-                onClick={handleRemoveImage}
-                aria-label="Удалить картинку"
-              >
-                &times;
-              </button>
-            )}
+        <label>Файлы</label>
+
+        {files.length > 0 && (
+          <div className={styles.filePreviewGrid}>
+            {files.map(renderPreview)}
           </div>
-        ) : (
-          <label className={styles.fileInputLabel}>
-            <span>Выбрать фото с устройства</span>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className={styles.fileInput}
-            />
-          </label>
         )}
+
+        <label className={styles.fileInputLabel}>
+          <span className="msym" style={{ fontSize: 20 }}>add_photo_alternate</span>
+          <span>Выбрать файлы</span>
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            onChange={handleFileChange}
+            className={styles.fileInput}
+          />
+        </label>
       </div>
 
-      <button 
-        type="submit" 
-        className={styles.submitBtn} 
-        disabled={loading || uploading}
+      <button
+        type="submit"
+        className={styles.submitBtn}
+        disabled={loading || hasUploading || files.some((f) => f.uploading)}
       >
         {loading ? "Публикация..." : "Опубликовать"}
       </button>
