@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "@/logic/api";
 import { getUserIdFromToken } from "@/logic/utils";
-import { connectSocket, onNewMessage } from "@/logic/socket";
+import { connectSocket, onNewMessage, joinChat, leaveChat } from "@/logic/socket";
 import { getMyChats, getChatMessages, createChat, sendMessage } from "@/logic/chat";
 import type { Chat as ChatType, ChatMessage, ChatUser } from "@/logic/chat";
 
@@ -24,7 +24,6 @@ export default function Chat() {
 
   const userId = getUserIdFromToken();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const pendingIds = useRef<Set<string>>(new Set());
 
   const currentChat = selectedChatId && selectedChatId !== AI_CHAT_ID
     ? chats.find((c) => c.id === selectedChatId)
@@ -63,16 +62,20 @@ export default function Chat() {
       }
     };
     loadMessages();
+
+    joinChat(selectedChatId);
+    return () => {
+      leaveChat(selectedChatId);
+    };
   }, [selectedChatId]);
 
   useEffect(() => {
     const unsub = onNewMessage((msg: ChatMessage) => {
-      if (pendingIds.current.has(msg.id)) {
-        pendingIds.current.delete(msg.id);
-        return;
-      }
       if (selectedChatId && msg.chatId === selectedChatId) {
-        setMessages((prev) => [...prev, msg]);
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === msg.id)) return prev;
+          return [...prev, msg];
+        });
       }
       setChats((prev) => prev.map((c) => (c.id === msg.chatId ? { ...c, lastMessage: msg } : c)));
     });
@@ -106,8 +109,10 @@ export default function Chat() {
         setMessages((prev) => [...prev, aiMsg]);
       } else {
         const msg = await sendMessage(selectedChatId, text);
-        pendingIds.current.add(msg.id);
-        setMessages((prev) => [...prev, msg]);
+        setMessages((prev) => {
+          if (prev.some((m) => m.id === msg.id)) return prev;
+          return [...prev, msg];
+        });
         setChats((prev) => prev.map((c) => c.id === selectedChatId ? { ...c, lastMessage: msg } : c));
       }
     } catch (err) {

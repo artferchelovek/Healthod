@@ -7,7 +7,7 @@ export function getSocket(): Socket | null {
 }
 
 export function connectSocket(): Socket {
-  if (socket?.connected) return socket;
+  if (socket) return socket;
 
   const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
   const baseUrl = API_URL.startsWith("/")
@@ -18,7 +18,7 @@ export function connectSocket(): Socket {
 
   socket = io(baseUrl, {
     auth: { token },
-    transports: ["websocket", "polling"],
+    transports: ["polling", "websocket"],
   });
 
   socket.on("connect_error", (err) => {
