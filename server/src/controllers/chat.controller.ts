@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../lib/prisma";
+import { getIO } from "../socket";
 
 export const createChat = async (req: Request, res: Response) => {
   try {
@@ -233,6 +234,12 @@ export const sendMessage = async (req: Request, res: Response) => {
         sender: { select: { id: true, username: true, avatarUrl: true } },
       },
     });
+
+    try {
+      getIO().to(`chat:${chatId}`).emit("message:new", message);
+    } catch (e) {
+      // socket not initialized yet
+    }
 
     return res.status(201).json(message);
   } catch (error) {
