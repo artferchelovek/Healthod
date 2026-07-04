@@ -82,6 +82,10 @@ struct CreateGroupRequest: Codable {
     let participantIds: [String]
 }
 
+struct InviteRequest: Codable {
+    let userIds: [String]
+}
+
 @MainActor
 class ChatManager: ObservableObject {
     static let shared = ChatManager()
@@ -141,12 +145,20 @@ class ChatManager: ObservableObject {
 
     func createGroupChat(name: String, participantIds: [String]) async -> Chat? {
         do {
-            let body = CreateGroupRequest(name: name, participantIds: participantIds)
-            let chat: Chat = try await network.post(endpoint: "/chats/group", body: body)
-            if !chats.contains(where: { $0.id == chat.id }) {
-                chats.insert(chat, at: 0)
+            struct Community: Decodable { let id: String }
+            let community: Community = try await network.post(endpoint: "/communities", body: CreateGroupRequest(name: name, participantIds: []))
+            if !participantIds.isEmpty {
+                let _: [String: String] = try await network.post(endpoint: "/communities/\(community.id)/invite", body: InviteRequest(userIds: participantIds))
             }
-            return chat
+            try? await Task.sleep(nanoseconds: 500_000_000)
+            let allChats: [Chat] = try await network.fetch(endpoint: "/chats")
+            if let groupChat = allChats.first(where: { $0.communityId == community.id }) {
+                if !chats.contains(where: { $0.id == groupChat.id }) {
+                    chats.insert(groupChat, at: 0)
+                }
+                return groupChat
+            }
+            return nil
         } catch {
             print("Ошибка создания группы: \(error)")
             return nil
