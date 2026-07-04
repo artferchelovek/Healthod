@@ -19,8 +19,14 @@ const storage = multer.diskStorage({
 });
 
 const ALLOWED_MIMES = [
-  "image/jpeg", "image/png", "image/gif", "image/webp",
-  "video/mp4", "video/mpeg", "video/webm", "video/quicktime",
+  "image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml", "image/bmp",
+  "video/mp4", "video/mpeg", "video/webm", "video/quicktime", "video/x-msvideo",
+  "audio/mpeg", "audio/wav", "audio/ogg", "audio/aac", "audio/flac", "audio/webm",
+  "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "text/plain", "text/csv", "application/json", "application/zip", "application/x-zip-compressed",
+  "application/x-rar-compressed", "application/x-7z-compressed", "application/gzip",
 ];
 
 export const upload = multer({
