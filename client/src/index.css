@@ -20,6 +20,14 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+input, textarea, select {
+    font-size: 16px;
+}
+
+input:focus, textarea:focus, select:focus {
+    font-size: 16px;
+}
+
 :root {
     --background: #F4EFE3;
     --surface: #FFFFFF;
