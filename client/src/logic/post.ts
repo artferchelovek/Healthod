@@ -22,3 +22,11 @@ export const getComments = async (postId: string): Promise<CommentWithAuthor[]> 
 export const createComment = async (postId: string, content: string): Promise<CommentWithAuthor> => {
   return await api.post(`/posts/${postId}/comments`, { content }).then((res) => res.data);
 };
+
+export const deletePost = async (postId: string): Promise<void> => {
+  await api.delete(`/posts/${postId}`);
+};
+
+export const deleteComment = async (commentId: string): Promise<void> => {
+  await api.delete(`/comments/${commentId}`);
+};

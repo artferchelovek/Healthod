@@ -55,6 +55,14 @@ export default function Workouts() {
   const [calories, setCalories] = useState<number>(100);
   const [formLoading, setFormLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const handleDeleteExercise = async (exerciseId: string) => {
+    try {
+      await api.delete(`/exercises/${exerciseId}`);
+      fetchWorkouts();
+    } catch (err) {
+      console.error("Ошибка удаления упражнения:", err);
+    }
+  };
 
   const fetchWorkouts = async () => {
     try {
@@ -223,6 +231,13 @@ export default function Workouts() {
                 <span className={styles.exCalories}>
                   {ex.calories || 0} ккал
                 </span>
+                <div className={styles.exActions}>
+                  <button className={styles.exDeleteBtn} onClick={() => handleDeleteExercise(ex.id)} aria-label="Удалить">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             ))}
 
@@ -261,6 +276,13 @@ export default function Workouts() {
                     <span className={styles.exCalories}>
                       {ex.calories || 0} ккал
                     </span>
+                    <div className={styles.exActions}>
+                      <button className={styles.exDeleteBtn} onClick={() => handleDeleteExercise(ex.id)} aria-label="Удалить">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

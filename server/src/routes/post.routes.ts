@@ -98,6 +98,8 @@ router.get("/:id", authMiddleware, getPostById);
  *                   type: string
  *               communityId:
  *                 type: string
+ *               communityId:
+ *                 type: string
  *     responses:
  *       201:
  *         description: PostCard created

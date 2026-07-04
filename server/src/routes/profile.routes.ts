@@ -5,6 +5,7 @@ import {
   getProfileById,
   followUser,
   unfollowUser,
+  searchUsers,
 } from "../controllers/profile.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
 
@@ -57,6 +58,26 @@ router.get("/me", authMiddleware, getMyProfile);
  *         description: Profile updated
  */
 router.patch("/", authMiddleware, updateProfile);
+
+/**
+ * @swagger
+ * /api/profile/search:
+ *   get:
+ *     summary: Search users by username
+ *     tags: [Profile]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Found users
+ */
+router.get("/search", authMiddleware, searchUsers);
 
 /**
  * @swagger

@@ -184,6 +184,62 @@ export const getProfileById = async (req: Request, res: Response) => {
   }
 };
 
+export const searchUsers = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const q = (req.query.q as string) || "";
+
+    if (q.length < 1) {
+      return res.json([]);
+    }
+
+    const users = await prisma.user.findMany({
+      where: {
+        username: { contains: q, mode: "insensitive" },
+        id: { not: req.user.userId },
+      },
+      select: {
+        id: true,
+        username: true,
+        avatarUrl: true,
+        _count: {
+          select: { followers: true },
+        },
+      },
+      take: 20,
+      orderBy: { username: "asc" },
+    });
+
+    const isFollowingMap = new Map<string, boolean>();
+    if (users.length > 0) {
+      const follows = await prisma.follow.findMany({
+        where: {
+          followerId: req.user.userId,
+          followingId: { in: users.map((u) => u.id) },
+        },
+        select: { followingId: true },
+      });
+      follows.forEach((f) => isFollowingMap.set(f.followingId, true));
+    }
+
+    return res.json(
+      users.map((u) => ({
+        id: u.id,
+        username: u.username,
+        avatarUrl: u.avatarUrl,
+        followersCount: u._count.followers,
+        isFollowing: isFollowingMap.has(u.id),
+      })),
+    );
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const followUser = async (req: Request, res: Response) => {
   try {
     if (!req.user) {

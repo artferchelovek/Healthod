@@ -142,6 +142,7 @@ export const updateCommunity = async (req: Request, res: Response) => {
     }
 
     const id = req.params.id as string;
+
     const { name, description, avatarUrl } = req.body;
 
     const community = await prisma.community.findUnique({ where: { id } });
@@ -333,6 +334,7 @@ export const getCommunityPosts = async (req: Request, res: Response) => {
     }
 
     const communityId = req.params.id as string;
+    
     const userId = req.user.userId;
 
     const community = await prisma.community.findUnique({ where: { id: communityId } });

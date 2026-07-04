@@ -3,6 +3,45 @@
     width: 100%;
 }
 
+.tabsRow {
+    display: flex;
+    background: var(--surface-muted);
+    border-radius: 14px;
+    padding: 3px;
+    gap: 2px;
+    border: 1px solid rgba(40, 32, 15, 0.04);
+}
+
+.tabBtn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 0;
+    border-radius: 11px;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--inf-soft);
+    transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.activeTab {
+    background-color: var(--surface);
+    color: var(--green-dark);
+    box-shadow: 0 2px 6px rgba(40, 32, 15, 0.06);
+}
+
+.activeTab .msymf {
+    font-variation-settings: 'FILL' 1;
+}
+
 .fab {
     position: fixed;
     bottom: 95px;
