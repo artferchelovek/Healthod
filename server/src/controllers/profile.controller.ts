@@ -240,6 +240,48 @@ export const searchUsers = async (req: Request, res: Response) => {
   }
 };
 
+export const getMyFollowing = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
+
+    const follows = await prisma.follow.findMany({
+      where: { followerId: req.user.userId },
+      include: {
+        following: {
+          select: { id: true, username: true, avatarUrl: true },
+        },
+      },
+      orderBy: { followingId: "asc" },
+    });
+
+    return res.json(follows.map((f) => f.following));
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getMyFollowers = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
+
+    const follows = await prisma.follow.findMany({
+      where: { followingId: req.user.userId },
+      include: {
+        follower: {
+          select: { id: true, username: true, avatarUrl: true },
+        },
+      },
+      orderBy: { followerId: "asc" },
+    });
+
+    return res.json(follows.map((f) => f.follower));
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const followUser = async (req: Request, res: Response) => {
   try {
     if (!req.user) {
