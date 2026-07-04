@@ -21,6 +21,7 @@ import communityRoutes from "./routes/community.routes";
 
 import healthRoutes from "./routes/health.routes";
 import chatRoutes from "./routes/chat.routes";
+import notificationRoutes from "./routes/notification.routes";
 import { initSocket } from "./socket";
 
 dotenv.config();
@@ -60,6 +61,7 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/communities", communityRoutes);
 app.use("/api/health", healthRoutes);
 app.use("/api/chats", chatRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 
 const uploadsPath = path.join(__dirname, "../uploads");
