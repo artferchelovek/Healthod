@@ -4,6 +4,7 @@ import {
   deletePost,
   getPostById,
   getPosts,
+  getFeed,
 } from "../controllers/post.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
 import {
@@ -18,13 +19,32 @@ const router = Router();
  * @swagger
  * /api/posts:
  *   get:
- *     summary: Get all posts
+ *     summary: Get all posts (optional ?communityId= filter)
  *     tags: [Posts]
+ *     parameters:
+ *       - in: query
+ *         name: communityId
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: List of posts
  */
 router.get("/", authMiddleware, getPosts);
+
+/**
+ * @swagger
+ * /api/posts/feed:
+ *   get:
+ *     summary: Get personalized feed (posts from followed users + communities)
+ *     tags: [Posts]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Feed posts
+ */
+router.get("/feed", authMiddleware, getFeed);
 
 /**
  * @swagger
@@ -72,7 +92,11 @@ router.get("/:id", authMiddleware, getPostById);
  *                   - WORKOUT
  *                   - RECIPE
  *                   - POLL
- *               imageUrl:
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               communityId:
  *                 type: string
  *     responses:
  *       201:

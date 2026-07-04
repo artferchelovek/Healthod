@@ -1,16 +1,15 @@
 import { Router } from "express";
-import { uploadImage } from "../controllers/upload.controller";
-import { upload } from "../middleware/upload.middleware";
+import { uploadImages, uploadImage } from "../controllers/upload.controller";
+import { upload, uploadMultiple } from "../middleware/upload.middleware";
 import { authMiddleware } from "../middleware/auth.middleware";
 
-console.log("[upload.routes] loaded");
-
 const router = Router();
+
 /**
  * @swagger
  * /api/upload:
  *   post:
- *     summary: Upload image
+ *     summary: Upload single image
  *     tags: [Upload]
  *     security:
  *       - bearerAuth: []
@@ -27,11 +26,33 @@ const router = Router();
  *     responses:
  *       201:
  *         description: Image uploaded
- *       400:
- *         description: File is required
- *       401:
- *         description: Unauthorized
  */
 router.post("/", authMiddleware, upload.single("file"), uploadImage);
+
+/**
+ * @swagger
+ * /api/upload/multiple:
+ *   post:
+ *     summary: Upload multiple files (up to 10)
+ *     tags: [Upload]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               files:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: binary
+ *     responses:
+ *       201:
+ *         description: Files uploaded
+ */
+router.post("/multiple", authMiddleware, uploadMultiple, uploadImages);
 
 export default router;

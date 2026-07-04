@@ -1,32 +1,31 @@
 import { Request, Response } from "express";
 
-export const uploadImage = async (req: Request, res: Response) => {
+export const uploadImages = async (req: Request, res: Response) => {
   try {
-    console.log("[uploadImage] step 1 - entered");
-
-    if (!req.file) {
-      console.log("[uploadImage] no file");
-
-      return res.status(400).json({
-        error: "File is required",
-      });
+    if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
+      return res.status(400).json({ error: "At least one file is required" });
     }
 
-    console.log("[uploadImage] file:", req.file);
+    const urls = req.files.map((file) => `/uploads/${file.filename}`);
 
+    return res.status(201).json({ images: urls });
+  } catch (error) {
+    console.error("[uploadImages] error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const uploadImage = async (req: Request, res: Response) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "File is required" });
+    }
 
     const imageUrl = `/uploads/${req.file.filename}`;
 
-    console.log("[uploadImage] generated url:", imageUrl);
-
-    return res.status(201).json({
-      imageUrl,
-    });
+    return res.status(201).json({ imageUrl });
   } catch (error) {
     console.error("[uploadImage] error:", error);
-
-    return res.status(500).json({
-      error: "Internal server error",
-    });
+    return res.status(500).json({ error: "Internal server error" });
   }
 };

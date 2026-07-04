@@ -108,7 +108,7 @@ export const getProfileById = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const profileId = req.params.id;
+    const profileId = req.params.id as string;
 
     const profile = await prisma.user.findUnique({
       where: { id: profileId },
@@ -190,7 +190,7 @@ export const followUser = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const followingId = req.params.id;
+    const followingId = req.params.id as string;
     const followerId = req.user.userId;
 
     if (followingId === followerId) {
@@ -241,7 +241,7 @@ export const unfollowUser = async (req: Request, res: Response) => {
       where: {
         followerId_followingId: {
           followerId: req.user.userId,
-          followingId: req.params.id,
+          followingId: req.params.id as string,
         },
       },
     });
@@ -254,13 +254,13 @@ export const unfollowUser = async (req: Request, res: Response) => {
       where: {
         followerId_followingId: {
           followerId: req.user.userId,
-          followingId: req.params.id,
+          followingId: req.params.id as string,
         },
       },
     });
 
     const profile = await prisma.user.findUnique({
-      where: { id: req.params.id },
+      where: { id: req.params.id as string },
       select: {
         _count: { select: { followers: true } },
       },

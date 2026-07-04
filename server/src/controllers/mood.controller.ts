@@ -76,7 +76,7 @@ export const getMoodLogById = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const id = req.params.id;
+    const id = req.params.id as string;
     const moodLog = await prisma.moodLog.findUnique({ where: { id } });
 
     if (!moodLog) {
@@ -100,7 +100,7 @@ export const deleteMoodLog = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const id = req.params.id;
+    const id = req.params.id as string;
     const moodLog = await prisma.moodLog.findUnique({ where: { id } });
 
     if (!moodLog) {

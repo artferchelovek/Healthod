@@ -16,6 +16,8 @@ import foodRoutes from "./routes/food.routes";
 import moodRoutes from "./routes/mood.routes";
 import achievementRoutes from "./routes/achievement.routes";
 import profileRoutes from "./routes/profile.routes";
+import communityRoutes from "./routes/community.routes";
+import healthRoutes from "./routes/health.routes";
 
 dotenv.config();
 
@@ -47,6 +49,8 @@ app.use("/api/food", foodRoutes);
 app.use("/api/mood", moodRoutes);
 app.use("/api/achievements", achievementRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/communities", communityRoutes);
+app.use("/api/health", healthRoutes);
 
 const uploadsPath = path.join(__dirname, "../uploads");
 
