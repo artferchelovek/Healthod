@@ -32,7 +32,7 @@ struct ChatListView: View {
             } else {
                 List {
                     ForEach(manager.chats) { chat in
-                        NavigationLink(value: chat) {
+                        NavigationLink(value: chat.id) {
                             ChatRow(chat: chat)
                         }
                     }
@@ -46,8 +46,8 @@ struct ChatListView: View {
         .background(Color(red: 0.96, green: 0.95, blue: 0.93).ignoresSafeArea())
         .navigationTitle("Сообщения")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(for: Chat.self) { chat in
-            ChatDetailView(chat: chat)
+        .navigationDestination(for: String.self) { chatId in
+            ChatDetailView(chatId: chatId)
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
